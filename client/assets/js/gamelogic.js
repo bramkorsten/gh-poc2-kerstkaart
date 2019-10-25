@@ -3,51 +3,54 @@
  * @Email:  code@bramkorsten.nl
  * @Project: Kerstkaart 2019
  * @Filename: gamelogic.js
- * @Last modified time: 2019-10-24T16:58:49+02:00
+ * @Last modified time: 2019-10-25T14:52:19+02:00
  * @Copyright: Copyright 2019 - Bram Korsten
  */
 
-var client = {
-  name: "name",
-  id: 123,
-  input: "bla"
-};
-
-$(function() {
-  $("input").click(function(e) {
-    var message = client;
-    message.input = this.value;
-    gameServer.send(JSON.stringify(message));
-  });
-});
+const gameServer = new WebSocket("ws://fa01f12a.ngrok.io");
+const connection = new Connection(gameServer);
 
 class GameLogic {
   constructor() {
-    this.setupGame();
+    this.isInitialized = false;
+    this.isInGame = false;
+    this.setupGameListeners();
+    // this.setupGame();
   }
 
   setupGame() {
-    this.client = new Client({
-      name: "testUser"
-    });
-    this.gameServer = new WebSocket("ws://localhost:8080");
-    this.setupGameListeners();
+    this.client = new Client();
+    this.client.init();
+    connection.sendHandshake();
+    if (this.client.isExistingUser) {
+      $(".signupWindow").remove();
+    }
   }
 
   setupGameListeners() {
-    this.gameServer.onopen = function(event) {
-      console.log("The connection to the game server has been made!");
-      game.sendMessage("connect", game.client);
+    gameServer.onopen = function(event) {
+      console.log("Server connection successful!");
+      if (!game.isInitialized) {
+        game.setupGame();
+      }
+    };
+    gameServer.onclose = function(event) {
+      console.log("Server connection lost...");
+    };
+    gameServer.onmessage = function(event) {
+      const message = JSON.parse(event.data);
+      console.log("Message Recieved of type: " + message.type);
+      console.log(message);
     };
   }
 
-  sendMessage(type, msg) {
-    const message = {
-      uid: this.client.uid,
-      type: type,
-      message: msg
-    };
-    this.gameServer.send(JSON.stringify(message));
+  connectToMatch() {
+    const matchId = _getQueryVariable("m");
+    if (!matchId) {
+      console.error("Could not find matchID in query");
+      return false;
+    }
+    connection.sendMessage("requestMatch", matchId);
   }
 }
 

@@ -7,20 +7,26 @@
     <link rel="stylesheet" href="assets/css/styles.css" />
   </head>
   <body>
-    <input type="button" value="Rock" />
-    <input type="button" value="Paper" />
-    <input type="button" value="Scissors" />
+    <div class="signupWindow">
+      <input id="nameField" type="text" placeholder="Enter your name" />
+      <input id="setNameButton" type="button" value="Start game" />
+    </div>
+    <br />
+    <div class="gameWindow">
+      <input type="button" value="Rock" />
+      <input type="button" value="Paper" />
+      <input type="button" value="Scissors" />
+    </div>
 
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
       crossorigin="anonymous"
     ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.1.0/fingerprint2.min.js"
-      charset="utf-8"
-    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+    <script src="assets/js/connection.js" charset="utf-8"></script>
     <script src="assets/js/gamelogic.js" charset="utf-8"></script>
     <script src="assets/js/client.js" charset="utf-8"></script>
+    <script src="assets/js/functions.js" charset="utf-8"></script>
   </body>
 </html>
