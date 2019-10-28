@@ -3,7 +3,7 @@
  * @Email:  code@bramkorsten.nl
  * @Project: Kerstkaart (server)
  * @Filename: index.js
- * @Last modified time: 2019-10-28T14:50:02+01:00
+ * @Last modified time: 2019-10-28T16:21:37+01:00
  * @Copyright: Copyright 2019 - Bram Korsten
  */
 
@@ -21,10 +21,15 @@ class GameServer {
     database.setDefaults();
     this.functions = require("./classes/functions.js");
     this.setConnection();
+    this.checkConnections();
   }
 
   setConnection() {
     this.wss.on("connection", function connection(ws) {
+      ws.isAlive = true;
+      ws.on("pong", function() {
+        this.isAlive = true;
+      });
       ws.on("message", function incoming(message) {
         const parsedMessage = JSON.parse(message);
         if (connections.hasOwnProperty(parsedMessage.uid) == false) {
@@ -42,6 +47,26 @@ class GameServer {
         }
       });
     });
+  }
+
+  checkConnections() {
+    const interval = setInterval(function ping() {
+      for (var connection in connections) {
+        if (connections[connection].isAlive === false) {
+          console.log(
+            "Client " + connection + " disconnected: No response on second ping"
+          );
+          // TODO: Remove Client from active games
+          gameServer.removePlayerFromActiveMatch(connection);
+          connections[connection].terminate();
+          delete connections[connection];
+          return true;
+        }
+
+        connections[connection].isAlive = false;
+        connections[connection].ping(noop);
+      }
+    }, 10000);
   }
 
   sendUpdateToMatch(matchId, match = false) {
@@ -84,6 +109,37 @@ class GameServer {
     const players = mainPlayers.concat(queuePlayers);
     return players;
   }
+
+  removePlayerFromActiveMatch(uid) {
+    const user = db
+      .get("clients")
+      .find({ uid: uid })
+      .value();
+
+    if (!user.currentMatch) {
+      return true;
+    }
+
+    db.get("matches")
+      .find({ matchId: user.currentMatch })
+      .get("currentGame.players")
+      .remove({ uid: uid })
+      .write();
+
+    db.get("matches")
+      .find({ matchId: user.currentMatch })
+      .get("queue")
+      .remove({ uid: uid })
+      .write();
+
+    db.get("clients")
+      .find({ uid: uid })
+      .unset("currentMatch")
+      .write();
+    return true;
+  }
 }
 
 gameServer = new GameServer();
+
+function noop() {}

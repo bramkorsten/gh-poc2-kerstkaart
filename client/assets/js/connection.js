@@ -16,8 +16,11 @@ class Connection {
       console.log("Connected to server");
       if (!game.isInitialized) {
         game.setupGame();
+      } else {
+        connection.sendHandshake();
       }
     };
+
     this.server.onclose = function(event) {
       connection.isConnected = false;
       console.log("Server connection lost...");
