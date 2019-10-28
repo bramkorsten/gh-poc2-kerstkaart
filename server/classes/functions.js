@@ -1,3 +1,5 @@
+// TODO: Optimize database writes by only calling write() once
+
 function isValidUser(uid) {
   const user = db
     .get("clients")
@@ -52,7 +54,27 @@ function createMatch(user, matchId) {
   return match;
 }
 
+function getUserMatch(user) {
+  const dbUser = db
+    .get("clients")
+    .find({ uid: user.uid })
+    .value();
+  if (dbUser.currentMatch) {
+    return dbUser.currentMatch;
+  }
+  return false;
+}
+
+function setUserMatch(user, matchId) {
+  db.get("clients")
+    .find({ uid: user.uid })
+    .assign({ currentMatch: matchId })
+    .write();
+}
+
 function placeUserInMatch(user, match) {
+  setUserMatch(user, match.matchId);
+  // TODO: Check for already in match / change matches
   for (var player of match.currentGame.players) {
     if (player.uid == user.uid) {
       console.log("Player already in match");
@@ -160,5 +182,7 @@ module.exports = {
     match = createMatch(user, matchId);
     gameServer.sendUpdateToMatch(match.matchId, match);
     return true;
-  }
+  },
+
+  setChoice: function(message, ws) {}
 };

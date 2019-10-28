@@ -3,7 +3,7 @@
  * @Email:  code@bramkorsten.nl
  * @Project: Kerstkaart 2019
  * @Filename: client.js
- * @Last modified time: 2019-10-25T12:26:28+02:00
+ * @Last modified time: 2019-10-28T15:01:26+01:00
  * @Copyright: Copyright 2019 - Bram Korsten
  */
 
@@ -62,7 +62,7 @@ class Client {
 
   setupListeners() {
     var client = this;
-    gameServer.onmessage = function(event) {
+    connection.server.onmessage = function(event) {
       const message = JSON.parse(event.data);
       switch (message.type) {
         case "userUpdate":

@@ -3,7 +3,7 @@
  * @Email:  code@bramkorsten.nl
  * @Project: Kerstkaart (server)
  * @Filename: index.js
- * @Last modified time: 2019-10-25T16:11:07+02:00
+ * @Last modified time: 2019-10-28T14:50:02+01:00
  * @Copyright: Copyright 2019 - Bram Korsten
  */
 
@@ -46,7 +46,7 @@ class GameServer {
 
   sendUpdateToMatch(matchId, match = false) {
     var players = this.getPlayersInMatch(matchId);
-    console.log(players);
+    // console.log(players);
     if (!match) {
       match = db
         .get("matches")

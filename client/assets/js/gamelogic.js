@@ -3,18 +3,17 @@
  * @Email:  code@bramkorsten.nl
  * @Project: Kerstkaart 2019
  * @Filename: gamelogic.js
- * @Last modified time: 2019-10-25T14:52:19+02:00
+ * @Last modified time: 2019-10-28T15:12:24+01:00
  * @Copyright: Copyright 2019 - Bram Korsten
  */
 
-const gameServer = new WebSocket("ws://fa01f12a.ngrok.io");
-const connection = new Connection(gameServer);
+const connection = new Connection();
 
 class GameLogic {
   constructor() {
     this.isInitialized = false;
     this.isInGame = false;
-    this.setupGameListeners();
+    this.server = connection.server;
     // this.setupGame();
   }
 
@@ -25,23 +24,7 @@ class GameLogic {
     if (this.client.isExistingUser) {
       $(".signupWindow").remove();
     }
-  }
-
-  setupGameListeners() {
-    gameServer.onopen = function(event) {
-      console.log("Server connection successful!");
-      if (!game.isInitialized) {
-        game.setupGame();
-      }
-    };
-    gameServer.onclose = function(event) {
-      console.log("Server connection lost...");
-    };
-    gameServer.onmessage = function(event) {
-      const message = JSON.parse(event.data);
-      console.log("Message Recieved of type: " + message.type);
-      console.log(message);
-    };
+    this.isInitialized = true;
   }
 
   connectToMatch() {
