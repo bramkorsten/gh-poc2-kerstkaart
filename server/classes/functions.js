@@ -1,9 +1,9 @@
 // TODO: Optimize database writes by only calling write() once
 
-function isValidUser(uid) {
+function isValidUser(token) {
   const user = db
     .get("clients")
-    .find({ uid: uid })
+    .find({ uToken: token })
     .value();
   if (!user) {
     return false;
@@ -11,10 +11,33 @@ function isValidUser(uid) {
   return user;
 }
 
+function isValidChoice(choice) {
+  const validChoices = ["rock", "paper", "scissors"];
+  return validChoices.includes(choice);
+}
+
 function sendInvalidUser(ws) {
   const response = {
     type: "error",
     message: "uID is invalid"
+  };
+  ws.send(JSON.stringify(response));
+  return false;
+}
+
+function sendUserNotInMatch(ws) {
+  const response = {
+    type: "error",
+    message: "User is not in a match"
+  };
+  ws.send(JSON.stringify(response));
+  return false;
+}
+
+function sendInvalidChoice(ws) {
+  const response = {
+    type: "error",
+    message: "Invalid Choice"
   };
   ws.send(JSON.stringify(response));
   return false;
@@ -38,9 +61,9 @@ function createMatch(user, matchId) {
     currentGame: {
       players: [
         {
-          uid: user.uid,
+          uToken: user.uToken,
           player: user,
-          choise: 0,
+          choice: 0,
           streak: 0
         }
       ]
@@ -57,7 +80,7 @@ function createMatch(user, matchId) {
 function getUserMatch(user) {
   const dbUser = db
     .get("clients")
-    .find({ uid: user.uid })
+    .find({ token: user.uToken })
     .value();
   if (dbUser.currentMatch) {
     return dbUser.currentMatch;
@@ -67,31 +90,42 @@ function getUserMatch(user) {
 
 function setUserMatch(user, matchId) {
   db.get("clients")
-    .find({ uid: user.uid })
+    .find({ uToken: user.uToken })
     .assign({ currentMatch: matchId })
     .write();
+}
+// TODO: Rewrite to token
+function setUserChoice(token, matchId, choice) {
+  db.get("matches")
+    .find({ matchId: matchId })
+    .get("currentGame.players")
+    .find({ uToken: token })
+    .assign({ choice: choice })
+    .write();
+  return getMatch(matchId);
 }
 
 function placeUserInMatch(user, match) {
   setUserMatch(user, match.matchId);
+  match = getMatch(match.matchId);
   // TODO: Check for already in match / change matches
   for (var player of match.currentGame.players) {
-    if (player.uid == user.uid) {
+    if (player.uToken == user.uToken) {
       console.log("Player already in match");
       return match;
     }
   }
   for (var player of match.queue) {
-    if (player.uid == user.uid) {
+    if (player.uToken == user.uToken) {
       console.log("Player already in queue");
       return match;
     }
   }
   if (match.currentGame.players.length != 2) {
     const player = {
-      uid: user.uid,
+      uToken: user.uToken,
       player: user,
-      choise: 0,
+      choice: 0,
       streak: 0
     };
     match.currentGame.players.push(player);
@@ -102,7 +136,7 @@ function placeUserInMatch(user, match) {
     return match;
   } else {
     const player = {
-      uid: user.uid,
+      uToken: user.uToken,
       player: user
     };
     match.queue.push(player);
@@ -121,19 +155,21 @@ module.exports = {
     console.log("New Connection Request");
     const response = {
       type: "handshake",
-      message: "Hello Client"
+      data: {
+        userToken: message.userToken
+      }
     };
     ws.send(JSON.stringify(response));
   },
 
   setUserInformation: function(message, ws) {
-    const uid = message.uid;
+    const token = message.userToken;
     const user = message.message;
-    const databaseUser = isValidUser(uid);
+    const databaseUser = isValidUser(token);
     if (!databaseUser) {
       console.log("Creating new user: " + user.name);
       const newUser = {
-        uid: uid,
+        uToken: token,
         name: user.name,
         gamesPlayed: 0
       };
@@ -148,41 +184,57 @@ module.exports = {
     } else {
       const response = {
         type: "userUpdate",
-        message: databaseUser
+        data: databaseUser
       };
       ws.send(JSON.stringify(response));
     }
   },
 
   getUserInformation: function(message, ws) {
-    const uid = message.uid;
-    const databaseUser = isValidUser(uid);
+    const token = message.userToken;
+    const databaseUser = isValidUser(token);
     if (!databaseUser) {
       return sendInvalidUser(ws);
     }
     const response = {
       type: "userUpdate",
-      message: databaseUser
+      data: databaseUser
     };
     ws.send(JSON.stringify(response));
   },
 
   requestMatch: function(message, ws) {
-    const uid = message.uid;
-    const user = isValidUser(uid);
+    const token = message.userToken;
+    const user = isValidUser(token);
     if (!user) {
       return sendInvalidUser(ws);
     }
     const matchId = message.message;
     if ((match = getMatch(matchId))) {
       match = placeUserInMatch(user, match);
-      gameServer.sendUpdateToMatch(match.matchId, match);
+      gameServer.sendUpdateToMatch(match.matchId);
       return true;
     }
     match = createMatch(user, matchId);
-    gameServer.sendUpdateToMatch(match.matchId, match);
+    gameServer.sendUpdateToMatch(match.matchId);
     return true;
   },
 
-  setChoice: function(message, ws) {}
+  setChoice: function(message, ws) {
+    const token = message.userToken;
+    const dbUser = isValidUser(token);
+    if (!dbUser) {
+      return sendInvalidUser(ws);
+    }
+    if (!dbUser.currentMatch) {
+      return sendUserNotInMatch(ws);
+    }
+    const choice = message.message.choice;
+    if (!choice || !isValidChoice(choice)) {
+      return sendInvalidChoice(ws);
+    }
+    const match = setUserChoice(dbUser.uToken, dbUser.currentMatch, choice);
+    gameServer.sendUpdateToMatch(match.matchId);
+    return true;
+  }
 };

@@ -19,3 +19,22 @@ function _getQueryVariable(variable) {
   }
   return false;
 }
+
+function getFunctions() {
+  return (sandboxFunctions = {
+    handshake: function(data) {
+      if (!data.userToken) {
+        console.error("Handshake did not contain a token. Refreshing...");
+        location.reload();
+        return false;
+      }
+      game.client.setToken(data.userToken);
+    },
+    userUpdate: function(data) {
+      game.client.updateUser(data);
+    },
+    matchUpdate: function(data) {
+      console.log(data);
+    }
+  });
+}

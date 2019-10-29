@@ -3,7 +3,7 @@
  * @Email:  code@bramkorsten.nl
  * @Project: Kerstkaart 2019
  * @Filename: client.js
- * @Last modified time: 2019-10-28T15:01:26+01:00
+ * @Last modified time: 2019-10-29T12:49:37+01:00
  * @Copyright: Copyright 2019 - Bram Korsten
  */
 
@@ -12,7 +12,6 @@ class Client {
     this.uid = 0;
     this.isInitialized = false;
     this.isExistingUser = false;
-    this.setupListeners();
     return this;
   }
 
@@ -20,7 +19,6 @@ class Client {
     if (Cookies.get("gameClientID")) {
       this.uid = Cookies.get("gameClientID");
       this.isExistingUser = true;
-      await this.getClientInfo();
       return this;
     } else {
       this.uid =
@@ -33,12 +31,16 @@ class Client {
     }
   }
 
-  async getClientInfo() {
+  getFromServer() {
     connection.sendMessage("getUserInformation", this.uid);
   }
 
   update() {
     connection.sendMessage("setUserInformation", this);
+  }
+
+  setToken(token) {
+    this.token = token;
   }
 
   setName(name) {
@@ -48,7 +50,8 @@ class Client {
   }
 
   updateUser(user) {
-    if (this.uid !== user.uid) {
+    console.log(user);
+    if (this.token !== user.uToken) {
       console.warn("The user id revieved from the server does not match");
       return false;
     }
@@ -58,21 +61,6 @@ class Client {
     if (!game.isInGame) {
       game.connectToMatch();
     }
-  }
-
-  setupListeners() {
-    var client = this;
-    connection.server.onmessage = function(event) {
-      const message = JSON.parse(event.data);
-      switch (message.type) {
-        case "userUpdate":
-          client.updateUser(message.message);
-          break;
-        default:
-      }
-      console.log("Message Recieved of type: " + message.type);
-      console.log(message);
-    };
   }
 
   destroy() {

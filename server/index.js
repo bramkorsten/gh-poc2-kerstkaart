@@ -3,10 +3,12 @@
  * @Email:  code@bramkorsten.nl
  * @Project: Kerstkaart (server)
  * @Filename: index.js
- * @Last modified time: 2019-10-28T16:21:37+01:00
+ * @Last modified time: 2019-10-29T13:55:09+01:00
  * @Copyright: Copyright 2019 - Bram Korsten
  */
-
+const config = require("./_config.json");
+// const encryptor = require("simple-encryptor")(config.secret);
+const crypto = require("crypto");
 const WebSocket = require("ws");
 const database = require("./classes/database.js");
 db = database.getDatabase();
@@ -32,10 +34,9 @@ class GameServer {
       });
       ws.on("message", function incoming(message) {
         const parsedMessage = JSON.parse(message);
-        if (connections.hasOwnProperty(parsedMessage.uid) == false) {
-          const uid = parsedMessage.uid;
-          connections[uid] = ws;
-        }
+        parsedMessage.userToken = encrypt(parsedMessage.uid);
+        connections[parsedMessage.userToken] = ws;
+
         if (gameServer.functions[parsedMessage.type] instanceof Function) {
           gameServer.functions[parsedMessage.type](parsedMessage, ws);
         } else {
@@ -69,18 +70,27 @@ class GameServer {
     }, 10000);
   }
 
-  sendUpdateToMatch(matchId, match = false) {
+  sendUpdateToMatch(matchId, match = false, sendChoices = false) {
     var players = this.getPlayersInMatch(matchId);
-    // console.log(players);
     if (!match) {
       match = db
         .get("matches")
         .find({ matchId: matchId })
+        .cloneDeep()
         .value();
     }
+
+    var matchVal = match;
+
+    if (!sendChoices) {
+      matchVal.currentGame.players.forEach(function(player, i) {
+        matchVal.currentGame.players[i].choice = "Wouldn't you like to know";
+      });
+    }
+
     const response = {
       type: "matchUpdate",
-      message: match
+      message: matchVal
     };
     for (var player of players) {
       console.log("sending update to: " + player);
@@ -98,42 +108,43 @@ class GameServer {
       .get("matches")
       .find({ matchId: matchId })
       .get("currentGame.players")
-      .map("uid")
+      .map("uToken")
       .value();
     const queuePlayers = db
       .get("matches")
       .find({ matchId: matchId })
       .get("queue")
-      .map("uid")
+      .map("uToken")
       .value();
     const players = mainPlayers.concat(queuePlayers);
     return players;
   }
 
-  removePlayerFromActiveMatch(uid) {
+  removePlayerFromActiveMatch(token) {
+    // TODO: If player is in a current match, update the queue and let the opponent win!
     const user = db
       .get("clients")
-      .find({ uid: uid })
+      .find({ uToken: token })
       .value();
 
-    if (!user.currentMatch) {
+    if (!user || !user.currentMatch) {
       return true;
     }
 
     db.get("matches")
       .find({ matchId: user.currentMatch })
       .get("currentGame.players")
-      .remove({ uid: uid })
+      .remove({ uToken: token })
       .write();
 
     db.get("matches")
       .find({ matchId: user.currentMatch })
       .get("queue")
-      .remove({ uid: uid })
+      .remove({ uToken: token })
       .write();
 
     db.get("clients")
-      .find({ uid: uid })
+      .find({ uToken: token })
       .unset("currentMatch")
       .write();
     return true;
@@ -143,3 +154,17 @@ class GameServer {
 gameServer = new GameServer();
 
 function noop() {}
+
+function encrypt(string) {
+  const encryptor = crypto.createCipher("aes-128-cbc", config.secret);
+  var hashed = encryptor.update(string, "utf8", "hex");
+  hashed += encryptor.final("hex");
+  return hashed;
+}
+
+function decrypt(hash) {
+  const decryptor = crypto.createDecipher("aes-128-cbc", config.secret);
+  var string = decryptor.update(hash, "hex", "utf8");
+  string += decryptor.final("utf8");
+  return string;
+}

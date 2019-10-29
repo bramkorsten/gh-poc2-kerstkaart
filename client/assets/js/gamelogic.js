@@ -3,7 +3,7 @@
  * @Email:  code@bramkorsten.nl
  * @Project: Kerstkaart 2019
  * @Filename: gamelogic.js
- * @Last modified time: 2019-10-28T15:12:24+01:00
+ * @Last modified time: 2019-10-29T12:49:59+01:00
  * @Copyright: Copyright 2019 - Bram Korsten
  */
 
@@ -14,6 +14,7 @@ class GameLogic {
     this.isInitialized = false;
     this.isInGame = false;
     this.server = connection.server;
+    this.sandbox = getFunctions();
     // this.setupGame();
   }
 
@@ -22,6 +23,7 @@ class GameLogic {
     this.client.init();
     connection.sendHandshake();
     if (this.client.isExistingUser) {
+      this.client.getFromServer();
       $(".signupWindow").remove();
     }
     this.isInitialized = true;

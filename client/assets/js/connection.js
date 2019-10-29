@@ -35,7 +35,11 @@ class Connection {
     this.server.onmessage = function(event) {
       const message = JSON.parse(event.data);
       console.log("Message Recieved of type: " + message.type);
-      console.log(message);
+      if (game.sandbox[message.type] instanceof Function) {
+        game.sandbox[message.type](message.data);
+      } else {
+        console.log("not a function");
+      }
     };
   }
 
