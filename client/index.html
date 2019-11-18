@@ -5,28 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>POC2</title>
     <link rel="stylesheet" href="assets/css/styles.css" />
+    <script src="assets/includes/aframe.js"></script>
   </head>
   <body>
-    <div class="signupWindow">
-      <input id="nameField" type="text" placeholder="Enter your name" />
-      <input id="setNameButton" type="button" value="Start game" />
-    </div>
-    <br />
-    <div class="gameWindow">
-      <input type="button" value="Rock" />
-      <input type="button" value="Paper" />
-      <input type="button" value="Scissors" />
-    </div>
-
+    <a-scene>
+      <a-assets>
+        <a-asset-item
+          id="closet"
+          src="assets/models/closet/closet_v2.gltf"
+        ></a-asset-item>
+      </a-assets>
+      <a-entity
+        reticle
+        geometry="primitive: ring; radiusInner: 0.04; radiusOuter: 0.05"
+        material="color: #000077"
+      ></a-entity>
+      <a-entity
+        gltf-model="#closet"
+        position="0 0 -4"
+        rotation="0 180 0"
+      ></a-entity>
+      <a-sky color="#ECECEC"></a-sky>
+    </a-scene>
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
       crossorigin="anonymous"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
-    <script src="assets/js/connection.js" charset="utf-8"></script>
-    <script src="assets/js/gamelogic.js" charset="utf-8"></script>
+    <script src="assets/js/components/reticle.js" charset="utf-8"></script>
+    <script src="assets/js/components/anchor.js" charset="utf-8"></script>
+    <!-- <script src="assets/js/gamelogic.js" charset="utf-8"></script>
     <script src="assets/js/client.js" charset="utf-8"></script>
-    <script src="assets/js/functions.js" charset="utf-8"></script>
+    <script src="assets/js/functions.js" charset="utf-8"></script> -->
   </body>
 </html>
