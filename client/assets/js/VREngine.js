@@ -37,6 +37,7 @@ class VREngine {
     function getXRSessionInit(mode, options) {
       var space = (options || {}).referenceSpaceType || "local-floor";
       var sessionInit = (options && options.sessionInit) || {};
+      sessionInit.optionalFeatures = ["dom-overlay-for-handheld-ar"];
 
       // Nothing to do for default features.
       if (space == "viewer") return sessionInit;
@@ -74,10 +75,26 @@ class VREngine {
 
       function onSessionStarted(session) {
         game.xrSession = session;
+        let touching = false;
+        let touchStartTime;
+        game.xrSession.oninputsourceschange = function() {
+          if (game.xrSession.inputSources.length > 0) {
+            touching = true;
+            touchStartTime = new Date();
+          } else {
+            touching = false;
+            const touchEndTime = new Date();
+            if (touchEndTime - touchStartTime < 200) {
+              game.onARClick();
+            } else {
+              console.log("Was Long Touch");
+            }
+          }
+        };
         session.requestReferenceSpace("local").then(refSpace => {
           game.xrRefSpace = refSpace;
         });
-
+        game.scene.remove(game.reticle);
         game.reticle = new Reticle(session, game.camera);
         game.scene.add(game.reticle);
 
@@ -87,6 +104,7 @@ class VREngine {
         button.textContent = "EXIT " + name;
 
         currentSession = session;
+        game.onARStarted();
       }
 
       function onSessionEnded(/*event*/) {
@@ -96,6 +114,7 @@ class VREngine {
         button.textContent = "ENTER " + name;
 
         currentSession = null;
+        game.onARStopped();
       }
 
       //
@@ -176,8 +195,9 @@ class VREngine {
       stylizeElement(button);
 
       var mode = (options && options.mode) || "immersive-vr";
+      // SupportsSession will be replaced with isSessionSupported
       navigator.xr
-        .isSessionSupported(mode)
+        .supportsSession(mode)
         .then(showEnterXR)
         .catch(showXRNotFound);
 

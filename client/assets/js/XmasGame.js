@@ -33,6 +33,8 @@ class XmasGame {
             child.receiveShadow = true;
           }
         });
+        game.objects = {};
+        game.objects.closet = gltf.scene;
         game.scene.add(gltf.scene);
       },
       undefined,
@@ -116,7 +118,11 @@ class XmasGame {
       game.renderer.setClearColor(0xffffff, 1);
       // room.visible = true;
     });
-    window.addEventListener("click", this.onClick.bind(this));
+    this.renderer.domElement.addEventListener("click", this.onClick.bind(this));
+    this.renderer.domElement.addEventListener(
+      "touchstart",
+      this.onClick.bind(this)
+    );
   }
 
   /**
@@ -152,6 +158,37 @@ class XmasGame {
   onClick(e) {
     const x = 0;
     const y = 0;
+    console.log("jowe");
+    // console.log(this.reticle.position);
+  }
+
+  onARClick() {
+    console.log("click");
+    if (this.reticle && this.reticle.visible) {
+      console.log("reticle visible");
+      const position = this.reticle.position;
+      const rotation = this.reticle.rotation;
+
+      this.objects.closet.position.set(position.x, position.y, position.z);
+      this.objects.closet.rotation.set(
+        rotation.x,
+        rotation.y + THREE.Math.degToRad(180),
+        rotation.z
+      );
+      this.objects.closet.visible = true;
+    }
+  }
+
+  onARStarted() {
+    console.log("AR Started");
+    this.objects.closet.visible = false;
+    // this.scene.scale.set(0.5, 0.5, 0.5);
+  }
+
+  onARStopped() {
+    console.log("AR Stopped");
+    this.reticle.visible = none;
+    // this.scene.scale.set(1, 1, 1);
   }
 }
 
