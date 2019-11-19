@@ -53,4 +53,35 @@ class GameControls {
     tweenCameraTarget.easing(TWEEN.Easing.Quadratic.InOut);
     tweenCameraTarget.start();
   }
+
+  goToQueueCamera() {
+    const position = new THREE.Vector3(0, 10, 15);
+    game.controls.minAzimuthAngle = -Infinity;
+    game.controls.maxAzimuthAngle = Infinity;
+    game.controls.minPolarAngle = 0;
+    game.controls.enableZoom = true;
+    game.controls.rotateSpeed = 0.5;
+    var tweenCamera = new TWEEN.Tween(game.camera.position)
+      .to(
+        {
+          x: position.x,
+          y: position.y,
+          z: position.z
+        },
+        2000
+      )
+      .onUpdate(function() {
+        game.camera.position.set(this.x, this.y, this.z);
+      });
+    tweenCamera.easing(TWEEN.Easing.Quadratic.InOut);
+    tweenCamera.start();
+    var tweenCameraTarget = new TWEEN.Tween(game.controls.target)
+      .to(new THREE.Vector3(0, 0, 0), 2000)
+      .onUpdate(function() {
+        game.controls.target.set(this.x, this.y, this.z);
+      })
+      .onComplete(function() {});
+    tweenCameraTarget.easing(TWEEN.Easing.Quadratic.InOut);
+    tweenCameraTarget.start();
+  }
 }
