@@ -3,9 +3,479 @@
  * @Email:  code@bramkorsten.nl
  * @Project: Kerstkaart 2019
  * @Filename: styles.less
- * @Last modified time: 2019-10-24T14:18:26+02:00
+ * @Last modified time: 2019-11-21T13:14:32+01:00
  * @Copyright: Copyright 2019 - Bram Korsten
  */
+@font-face {
+  font-family: "Qanelas";
+  font-weight: 900;
+  src: url("../fonts/Qanelas-ExtraBold.otf") format("opentype");
+}
+@font-face {
+  font-family: "Qanelas";
+  font-weight: 300;
+  src: url("../fonts/Qanelas-Light.otf") format("opentype");
+}
+.gameStartup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100vw;
+  height: 100%;
+  background-color: #fff;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.gameStartup.visible {
+  display: flex;
+}
+.gameStartup .logo {
+  width: 300px;
+  height: 200px;
+  background: url("../img/logo_v1_full.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.gameStartup .loadingContainer {
+  max-width: 300px;
+  width: 90%;
+  display: none;
+}
+.gameStartup .loadingContainer.visible {
+  display: block;
+}
+.gameStartup .loadingContainer .loadingBar {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background-color: #ebe0fc;
+  position: relative;
+  overflow: hidden;
+}
+.gameStartup .loadingContainer .loadingBar .loadingDone {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  background-color: #e22b2b;
+  -webkit-transition: all 100ms cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 100ms cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 100ms cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 100ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+.gameStartup .loadingContainer .loadingMessage {
+  width: 100%;
+  height: auto;
+  color: #000;
+  text-align: center;
+  margin: 15px 0;
+  font-style: normal;
+  font-size: 14px;
+  font-family: "Qanelas";
+  font-weight: 900;
+}
+.gameStartup .gameInformation {
+  display: none;
+  max-width: 300px;
+  width: 90%;
+  height: auto;
+  font-style: normal;
+  font-size: 14px;
+  font-family: "Qanelas";
+  font-weight: 300;
+  text-align: center;
+}
+.gameStartup .gameInformation.visible {
+  display: block;
+}
+.gameStartup .gameInformation p {
+  margin: 15px 0;
+}
+.gameStartup .button {
+  margin-top: 50px;
+  background-color: #931414;
+  min-width: 130px;
+  min-height: 40px;
+  border-radius: 13px;
+  border: 3px solid #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  font-size: 14px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  text-transform: uppercase;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  user-select: none;
+  cursor: pointer;
+  display: none;
+}
+.gameStartup .button span {
+  padding: 11px 20px;
+}
+.gameStartup .button::before {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #e22b2b;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  bottom: 10%;
+  border-radius: 16px;
+}
+.gameStartup .button::after {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #fff;
+  width: 15px;
+  height: 8px;
+  z-index: -1;
+  top: 5px;
+  left: 5px;
+  border-radius: 50%;
+  transform: rotate(-20deg);
+}
+.gameStartup .button:hover::before {
+  background-color: #d61d1d;
+}
+.gameStartup .button.visible {
+  display: flex;
+}
+.gameOverlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 9;
+  top: 0;
+  left: 0;
+  user-select: none;
+  pointer-events: none;
+}
+.gameOverlay .gameControls {
+  position: absolute;
+  bottom: 50px;
+  width: 100%;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+}
+.gameOverlay .gameControls .hands {
+  display: flex;
+  justify-content: space-between;
+}
+.gameOverlay .gameControls .hands .hand {
+  margin: 0 15px;
+  width: 100px;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  pointer-events: painted;
+  cursor: pointer;
+}
+.gameOverlay .gameControls .hands .hand .image {
+  width: 100px;
+  height: 100px;
+  transform: 0;
+  -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+.gameOverlay .gameControls .hands .hand .text {
+  margin-top: 15px;
+  display: inline-block;
+  background-color: #471c72;
+  color: #fff;
+  border-radius: 9px;
+  font-style: normal;
+  font-size: 14px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  line-height: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 0 15px;
+  position: relative;
+  transform: 0;
+  -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+.gameOverlay .gameControls .hands .hand .text::after {
+  content: "";
+  background-color: #c6a4e9;
+  width: 100%;
+  height: 100%;
+  border-radius: 9px;
+  display: block;
+  position: absolute;
+  top: 3px;
+  left: 0;
+  z-index: -1;
+}
+.gameOverlay .gameControls .hands .hand.rock .image {
+  background: url("../img/Rock.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.gameOverlay .gameControls .hands .hand.paper {
+  transform: translateY(-30px);
+}
+.gameOverlay .gameControls .hands .hand.paper .image {
+  background: url("../img/Paper.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.gameOverlay .gameControls .hands .hand.scissor .image {
+  background: url("../img/Scissor.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.gameOverlay .gameControls .hands .hand:hover .image {
+  transform: rotate();
+  transform: translateY(-20px) rotate(-15deg);
+}
+.gameOverlay .menuIcons {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.gameOverlay .menuIcons .flex {
+  display: flex;
+  margin: 0 50px;
+}
+.gameOverlay .menuIcons .icon {
+  width: 60px;
+  height: auto;
+  display: block;
+  position: relative;
+  z-index: 1;
+  margin: 0 25px 0 0;
+  pointer-events: painted;
+  cursor: pointer;
+}
+.gameOverlay .menuIcons .icon:last-child {
+  margin: 0;
+}
+.gameOverlay .menuIcons .icon::after {
+  content: "";
+  display: block;
+  background-color: #ebe0fc;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  -webkit-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+}
+.gameOverlay .menuIcons .icon .image {
+  width: 50px;
+  height: 80px;
+  margin: -10px 5px 0 5px;
+  -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+.gameOverlay .menuIcons .icon .text {
+  margin-top: 15px;
+  display: inline-block;
+  background-color: #471c72;
+  color: #fff;
+  border-radius: 9px;
+  font-style: normal;
+  font-size: 14px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  line-height: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  padding: 0 15px;
+  position: relative;
+  transform: 0;
+  -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+.gameOverlay .menuIcons .icon .text::after {
+  content: "";
+  background-color: #c6a4e9;
+  width: 100%;
+  height: 100%;
+  border-radius: 9px;
+  display: block;
+  position: absolute;
+  top: 3px;
+  left: 0;
+  z-index: -1;
+}
+.gameOverlay .menuIcons .icon:hover::after {
+  transform: scale(1.3);
+}
+.gameOverlay .menuIcons .icon:hover .image {
+  transform: scale(1.2);
+}
+.gameOverlay .menuIcons .icon.modeSelector.viewer .image {
+  background: url("../img/icon_door.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.gameOverlay .menuIcons .icon.modeSelector.game .image {
+  background: url("../img/icon_world.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.gameOverlay .menuIcons .icon.information .image {
+  background: url("../img/icon_info.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.gameOverlay .menuIcons .buttonContainer {
+  width: 90px;
+  height: 90px;
+  background-color: #ebe0fc;
+  border-radius: 50%;
+}
+.gameOverlay .menuIcons .buttonContainer .toggleButton {
+  pointer-events: painted;
+  margin: 10px 0;
+  width: 50px;
+  height: 12px;
+  border-radius: 10px;
+  background-color: #959595;
+  position: relative;
+  display: block;
+  -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  margin: 28px 20px 15px;
+}
+.gameOverlay .menuIcons .buttonContainer .toggleButton.checked {
+  background-color: #471c72;
+}
+.gameOverlay .menuIcons .buttonContainer .toggleButton.checked div {
+  transform: translateX(100%);
+  background-color: #471c72;
+}
+.gameOverlay .menuIcons .buttonContainer .toggleButton.checked div::before {
+  background-color: #7a30c4;
+}
+.gameOverlay .menuIcons .buttonContainer .toggleButton div {
+  width: 25px;
+  height: 25px;
+  border: 3px solid #000;
+  border-radius: 50%;
+  background-color: #959595;
+  display: block;
+  position: absolute;
+  overflow: hidden;
+  top: -9.5px;
+  left: -6.5px;
+  transform: 0;
+  -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+.gameOverlay .menuIcons .buttonContainer .toggleButton div::before {
+  content: "";
+  display: block;
+  background-color: #c8c8c8;
+  border-radius: 50%;
+  width: 110%;
+  height: 100%;
+  position: absolute;
+  top: -3px;
+  left: -2px;
+  z-index: 1;
+  -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+}
+.gameOverlay .menuIcons .buttonContainer .toggleButton div::after {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #fff;
+  width: 16px;
+  height: 8px;
+  z-index: -1;
+  top: 4px;
+  left: 2px;
+  border-radius: 50%;
+  transform: rotate(-30deg);
+  z-index: 2;
+}
+.gameOverlay .menuIcons .buttonContainer .text {
+  text-transform: uppercase;
+  text-align: center;
+  font-style: normal;
+  font-size: 12px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  display: block;
+}
+@media only screen and (max-width: 1000px) {
+  .gameOverlay .menuIcons {
+    bottom: auto;
+    top: 50px;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .gameOverlay .menuIcons {
+    bottom: auto;
+    top: 25px;
+  }
+  .gameOverlay .menuIcons .flex {
+    margin: 0 25px;
+  }
+  .gameOverlay .gameControls {
+    bottom: 25px;
+  }
+  .gameOverlay .gameControls .hands .hand {
+    width: 75px;
+    height: auto;
+  }
+  .gameOverlay .gameControls .hands .hand .image {
+    width: 75px;
+    height: 100px;
+  }
+}
 html,
 body {
   margin: 0;

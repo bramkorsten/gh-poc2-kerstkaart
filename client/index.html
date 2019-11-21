@@ -7,6 +7,73 @@
     <link rel="stylesheet" href="assets/css/styles.css" />
   </head>
   <body>
+    <div class="gameStartup visible">
+      <div class="logo"></div>
+      <div class="loadingContainer">
+        <div class="loadingBar">
+          <div id="loadingBar" class="loadingDone"></div>
+        </div>
+        <div class="loadingMessage">
+          <span id="loadingMessage" class="message">Loading models</span>
+        </div>
+      </div>
+
+      <div class="gameInformation visible">
+        <p>
+          Warning! This game is kinda large. Please make sure to use a large
+          enough data plan, or preferrably wifi!
+        </p>
+        <p>
+          Merry Christmas!
+        </p>
+      </div>
+
+      <div class="startGameButton button visible" onClick="game.init()">
+        <span>Start Game</span>
+      </div>
+    </div>
+    <div class="gameOverlay">
+      <div class="gameControls">
+        <div class="hands">
+          <div class="hand rock">
+            <div class="image"></div>
+            <span class="text highlight">Steen</span>
+          </div>
+          <div class="hand paper">
+            <div class="image"></div>
+            <span class="text highlight">Papier</span>
+          </div>
+          <div class="hand scissor">
+            <div class="image"></div>
+            <span class="text highlight">Schaar</span>
+          </div>
+        </div>
+      </div>
+      <div class="menuIcons">
+        <div class="left flex">
+          <div class="buttonContainer">
+            <div id="arButton" class="toggleButton arButton">
+              <div class="buttonKnob"></div>
+            </div>
+            <span class="text">View in AR</span>
+          </div>
+        </div>
+        <div class="right flex">
+          <div class="icon information">
+            <div class="image"></div>
+            <!-- <div class="text Highlight">Naar de game</div> -->
+          </div>
+          <div
+            class="icon modeSelector viewer"
+            onClick="game.gameControls.switchMode(this)"
+            data-mode="viewer"
+          >
+            <div class="image"></div>
+            <!-- <div class="text Highlight">Naar de game</div> -->
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- <div class="signupWindow">
       <input id="nameField" type="text" placeholder="Enter your name" />
       <input id="setNameButton" type="button" value="Start game" />
@@ -51,6 +118,7 @@
       charset="utf-8"
     ></script>
     <script src="assets/js/GameControls.js" charset="utf-8"></script>
+    <script src="assets/js/GameModels.js" charset="utf-8"></script>
     <script src="assets/js/reticle.js" charset="utf-8"></script>
     <script src="assets/js/VREngine.js" charset="utf-8"></script>
     <script src="assets/js/XmasGame.js" charset="utf-8"></script>

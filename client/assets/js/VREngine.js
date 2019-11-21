@@ -189,6 +189,7 @@ class VREngine {
     }
 
     if ("xr" in navigator && "supportsSession" in navigator.xr) {
+      // var button = $("#arButton");
       var button = document.createElement("button");
       button.style.display = "none";
 

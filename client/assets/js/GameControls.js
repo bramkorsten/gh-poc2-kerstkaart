@@ -4,6 +4,22 @@ class GameControls {
     this.savedCameraPosition;
   }
 
+  addOnScreenControls(game) {
+    var width = window.innerWidth;
+    var height = window.innerHeight;
+    var cameraOrtho = new THREE.OrthographicCamera(
+      -width / 2,
+      width / 2,
+      height / 2,
+      -height / 2,
+      1,
+      10
+    );
+    cameraOrtho.position.z = 10;
+    var sceneOrtho = new THREE.Scene();
+    // game.models.textureLoader.load("assets/textures/sprites/viewinar.png");
+  }
+
   addCameraControls(game) {
     game.controls = new THREE.OrbitControls(
       game.camera,
@@ -20,6 +36,27 @@ class GameControls {
     game.controls.update();
   }
 
+  setupLoadingScreen() {
+    $(".gameInformation, .startGameButton").removeClass("visible");
+    $(".loadingContainer").addClass("visible");
+  }
+
+  switchMode(e) {
+    if ($(e).data("mode") == "viewer") {
+      $(e)
+        .removeClass("viewer")
+        .addClass("game");
+      $(e).data("mode", "game");
+      this.goToGameCamera();
+    } else {
+      $(e)
+        .removeClass("game")
+        .addClass("viewer");
+      $(e).data("mode", "viewer");
+      this.goToQueueCamera();
+    }
+  }
+
   goToGameCamera() {
     this.savedCameraPosition = {
       x: game.camera.position.x,
@@ -27,8 +64,8 @@ class GameControls {
       z: game.camera.position.z
     };
 
-    const to = new THREE.Vector3(4.8, 2.6, 0.01);
-    const targetTo = new THREE.Vector3(0, 2, 0);
+    const to = new THREE.Vector3(2, 1, 0.01);
+    const targetTo = new THREE.Vector3(0, 0.5, 0);
 
     var tweenCamera = new TWEEN.Tween(game.camera.position)
       .to({ x: to.x, y: to.y, z: to.z }, 2000)
@@ -55,7 +92,7 @@ class GameControls {
   }
 
   goToQueueCamera() {
-    const position = new THREE.Vector3(0, 10, 15);
+    const position = new THREE.Vector3(0, 4, 6);
     game.controls.minAzimuthAngle = -Infinity;
     game.controls.maxAzimuthAngle = Infinity;
     game.controls.minPolarAngle = 0;

@@ -1,0 +1,39 @@
+// main: styles.less
+
+@media only screen and (max-width: 1000px) {
+  .gameOverlay {
+    .menuIcons {
+      bottom: auto;
+      top: 50px;
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .gameOverlay {
+    .menuIcons {
+      bottom: auto;
+      top: 25px;
+
+      .flex {
+        margin: 0 25px;
+      }
+    }
+
+    .gameControls {
+      bottom: 25px;
+
+      .hands {
+        .hand {
+          width: 75px;
+          height: auto;
+
+          .image {
+            width: 75px;
+            height: 100px;
+          }
+        }
+      }
+    }
+  }
+}

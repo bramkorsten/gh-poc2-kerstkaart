@@ -1,18 +1,22 @@
 class XmasGame {
   constructor() {
     this.gameControls = new GameControls();
+    this.models = new GameModels(false);
     this.VREngine = new VREngine();
     this.scene;
+  }
 
+  init() {
+    console.log("Starting Game");
+    this.gameControls.setupLoadingScreen();
     this.setupRenderEngine();
     this.setupThreeScene();
-    this.animate();
   }
 
   /**
    * Setup the Three.js scene information and objects
    */
-  setupThreeScene() {
+  async setupThreeScene() {
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(
       75,
@@ -20,28 +24,10 @@ class XmasGame {
       0.1,
       1000
     );
+    this.gameControls.addOnScreenControls(this);
     this.gameControls.addCameraControls(this);
 
-    var loader = new THREE.GLTFLoader();
-
-    loader.load(
-      "assets/models/closet/closet_v2.gltf",
-      function(gltf) {
-        gltf.scene.traverse(function(child) {
-          if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-          }
-        });
-        game.objects = {};
-        game.objects.closet = gltf.scene;
-        game.scene.add(gltf.scene);
-      },
-      undefined,
-      function(error) {
-        console.error(error);
-      }
-    );
+    await this.models.loadModelsAndTextures(false, false);
 
     var directionalLight = new THREE.DirectionalLight(0xf9d891, 1);
     directionalLight.castShadow = true;
@@ -71,6 +57,8 @@ class XmasGame {
 
     this.addAREventListeners();
     window.addEventListener("resize", this.onWindowResize, false);
+
+    this.animate();
   }
 
   /**
@@ -136,11 +124,6 @@ class XmasGame {
 
   animate(e) {
     this.renderer.setAnimationLoop((time, frame) => this.render(time, frame));
-    // console.log(e, x);
-    // requestAnimationFrame((time, frame) => this.animate(time, frame));
-    // TWEEN.update();
-    // this.controls.update();
-    // this.renderer.render(this.scene, this.camera);
   }
 
   render(e, XRFrame) {
@@ -170,11 +153,7 @@ class XmasGame {
       const rotation = this.reticle.rotation;
 
       this.objects.closet.position.set(position.x, position.y, position.z);
-      this.objects.closet.rotation.set(
-        rotation.x,
-        rotation.y + THREE.Math.degToRad(180),
-        rotation.z
-      );
+      this.objects.closet.rotation.set(rotation.x, rotation.y, rotation.z);
       this.objects.closet.visible = true;
     }
   }
@@ -194,4 +173,5 @@ class XmasGame {
 
 $(function() {
   game = new XmasGame();
+  game.init();
 });

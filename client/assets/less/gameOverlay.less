@@ -1,0 +1,207 @@
+// main: styles.less
+
+.gameOverlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 9;
+  top: 0;
+  left: 0;
+  user-select: none;
+  pointer-events: none;
+
+  .gameControls {
+    position: absolute;
+    bottom: 50px;
+    width: 100%;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+
+    .hands {
+      display: flex;
+      justify-content: space-between;
+
+      .hand {
+        margin: 0 15px;
+        width: 100px;
+        height: 150px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        pointer-events: painted;
+        cursor: pointer;
+
+        .image {
+          width: 100px;
+          height: 100px;
+          transform: 0;
+          .defaultTransition();
+        }
+
+        .text {
+          margin-top: 15px;
+          .defaultHighlight();
+          transform: 0;
+          .defaultTransition();
+        }
+
+        &.rock {
+          .image {
+            background: url("../img/Rock.png");
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+          }
+        }
+
+        &.paper {
+          transform: translateY(-30px);
+          .image {
+            background: url("../img/Paper.png");
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+          }
+        }
+
+        &.scissor {
+          .image {
+            background: url("../img/Scissor.png");
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+          }
+        }
+
+        &:hover {
+          .image {
+            transform: rotate();
+            transform: translateY(-20px) rotate(-15deg);
+          }
+          .text {
+            // transform: scale(1.2);
+          }
+        }
+      }
+    }
+  }
+
+  .menuIcons {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .flex {
+      display: flex;
+      margin: 0 50px;
+    }
+
+    .icon {
+      width: 60px;
+      height: auto;
+      display: block;
+      position: relative;
+      z-index: 1;
+      margin: 0 25px 0 0;
+      pointer-events: painted;
+      cursor: pointer;
+
+      &:last-child {
+        margin: 0;
+      }
+
+      &::after {
+        content: "";
+        display: block;
+        background-color: @lightPurple;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        .defaultTransition(0.8s);
+      }
+
+      .image {
+        width: 50px;
+        height: 80px;
+        margin: -10px 5px 0 5px;
+        .defaultTransition();
+      }
+
+      .text {
+        margin-top: 15px;
+        .defaultHighlight();
+        transform: 0;
+        .defaultTransition();
+      }
+
+      &:hover {
+        &::after {
+          transform: scale(1.3);
+        }
+        .image {
+          transform: scale(1.2);
+        }
+      }
+      &.modeSelector {
+        &.viewer {
+          .image {
+            background: url("../img/icon_door.png");
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+          }
+        }
+
+        &.game {
+          .image {
+            background: url("../img/icon_world.png");
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+          }
+        }
+      }
+
+      &.information {
+        .image {
+          background: url("../img/icon_info.svg");
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
+      }
+    }
+
+    .buttonContainer {
+      width: 90px;
+      height: 90px;
+      background-color: @lightPurple;
+      border-radius: 50%;
+
+      .toggleButton {
+        pointer-events: painted;
+        .defaultToggleButton();
+        margin: 28px 20px 15px;
+      }
+
+      .text {
+        text-transform: uppercase;
+        text-align: center;
+        .defaultBoldFont(12px);
+        display: block;
+      }
+    }
+  }
+}
