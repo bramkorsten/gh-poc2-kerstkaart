@@ -4,6 +4,7 @@ class XmasGame {
     this.models = new GameModels(false);
     this.VREngine = new VREngine();
     this.scene;
+    this.isInAR = false;
   }
 
   init() {
@@ -52,8 +53,6 @@ class XmasGame {
         optionalFeatures: ["dom-overlay-for-handheld-ar"]
       }
     });
-    btnAR.style.left = "calc(50% + 10px)";
-    document.body.appendChild(btnAR);
 
     this.addAREventListeners();
     window.addEventListener("resize", this.onWindowResize, false);
@@ -90,6 +89,8 @@ class XmasGame {
   addAREventListeners() {
     this.renderer.vr.addEventListener("sessionstart", function(ev) {
       console.log("sessionstart", ev);
+      game.isInAR = true;
+      $("#arButton").addClass("checked");
       document.body.style.backgroundColor = "rgba(0, 0, 0, 0)";
       game.renderer.domElement.style.display = "none";
       if (game.renderer.vr.getSession().environmentBlendMode != "opaque") {
@@ -100,6 +101,8 @@ class XmasGame {
     });
     this.renderer.vr.addEventListener("sessionend", function(ev) {
       console.log("sessionend", ev);
+      game.isInAR = false;
+      $("#arButton").removeClass("checked");
       document.body.style.backgroundColor = "";
       game.renderer.domElement.style.display = "";
       // TODO: SETUP Which objects should be visible
@@ -111,6 +114,7 @@ class XmasGame {
       "touchstart",
       this.onClick.bind(this)
     );
+    document.body.addEventListener("touchstart", this.onClick.bind(this));
   }
 
   /**
@@ -141,12 +145,16 @@ class XmasGame {
   onClick(e) {
     const x = 0;
     const y = 0;
-    console.log("jowe");
+    console.log("Normal Click Detected");
+
+    if (game.isInAR) {
+      game.onARClick();
+    }
     // console.log(this.reticle.position);
   }
 
   onARClick() {
-    console.log("click");
+    console.log("AR Click passed");
     if (this.reticle && this.reticle.visible) {
       console.log("reticle visible");
       const position = this.reticle.position;
@@ -166,12 +174,12 @@ class XmasGame {
 
   onARStopped() {
     console.log("AR Stopped");
-    this.reticle.visible = none;
+    this.reticle.visible = false;
     // this.scene.scale.set(1, 1, 1);
   }
 }
 
 $(function() {
   game = new XmasGame();
-  game.init();
+  // game.init();
 });
