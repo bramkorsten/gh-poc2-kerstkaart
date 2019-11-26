@@ -48,6 +48,27 @@ class GameModels {
         console.error(error);
       }
     );
+
+    gltfLoader.load("assets/models/hand.glb", function(gltf) {
+      game.player1 = {
+        hand: new HandController(gltf)
+      };
+      game.player1.hand.scene.position.set(0, 0.42, -0.35);
+      game.scene.add(game.player1.hand.scene);
+      game.player1.hand.mixer.timeScale = 1.4;
+      game.player1.hand.start();
+    });
+
+    gltfLoader.load("assets/models/hand.glb", function(gltf) {
+      game.player2 = {
+        hand: new HandController(gltf)
+      };
+      game.player2.hand.scene.position.set(0, 0.42, 0.35);
+      game.player2.hand.scene.rotation.set(0, THREE.Math.degToRad(180), 0);
+      game.player2.hand.mixer.timeScale = 1.4;
+      game.scene.add(game.player2.hand.scene);
+      game.player2.hand.start();
+    });
   }
 
   /**

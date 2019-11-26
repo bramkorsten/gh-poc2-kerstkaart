@@ -5,6 +5,7 @@ class XmasGame {
     this.VREngine = new VREngine();
     this.scene;
     this.isInAR = false;
+    this.clock = new THREE.Clock();
   }
 
   init() {
@@ -131,6 +132,7 @@ class XmasGame {
   }
 
   render(e, XRFrame) {
+    var delta = game.clock.getDelta();
     if (XRFrame) {
       // console.log(XRFrame.getDevicePose(game.xrRefSpace));
       if (this.reticle) {
@@ -139,6 +141,12 @@ class XmasGame {
     }
     TWEEN.update();
     game.controls.update();
+    if (game.player1 && game.player1.hand) {
+      game.player1.hand.updateAnimations(delta);
+    }
+    if (game.player2 && game.player2.hand) {
+      game.player2.hand.updateAnimations(delta);
+    }
     game.renderer.render(game.scene, game.camera);
   }
 
@@ -177,9 +185,16 @@ class XmasGame {
     this.reticle.visible = false;
     // this.scene.scale.set(1, 1, 1);
   }
+
+  playMatch() {
+    this.player1.hand.state.isWinning = true;
+    this.player2.hand.state.isWinning = false;
+    this.player1.hand.doShake("scissors");
+    this.player2.hand.doShake("paper");
+  }
 }
 
 $(function() {
   game = new XmasGame();
-  // game.init();
+  game.init();
 });

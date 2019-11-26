@@ -132,7 +132,7 @@ class VREngine {
       message.style.width = "180px";
       message.style.textDecoration = "none";
 
-      stylizeElement(message);
+      // stylizeElement(message);
 
       return message;
     }
