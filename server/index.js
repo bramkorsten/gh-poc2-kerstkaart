@@ -9,9 +9,30 @@
 const config = require("./_config.json");
 // const encryptor = require("simple-encryptor")(config.secret);
 const crypto = require("crypto");
-const key = crypto.createHash('sha256').update(String(config.secret)).digest('hex').slice(0, 16);
+const key = crypto
+  .createHash("sha256")
+  .update(String(config.secret))
+  .digest("hex")
+  .slice(0, 16);
 console.log(key);
-const crypt_iv = Buffer.from([0xd8, 0xb1, 0xd1, 0xbc, 0xdd, 0x58, 0x3b, 0xdd, 0x89, 0x4f, 0x33, 0x6a, 0x7b, 0x4b, 0x9e, 0x1b]);
+const crypt_iv = Buffer.from([
+  0xd8,
+  0xb1,
+  0xd1,
+  0xbc,
+  0xdd,
+  0x58,
+  0x3b,
+  0xdd,
+  0x89,
+  0x4f,
+  0x33,
+  0x6a,
+  0x7b,
+  0x4b,
+  0x9e,
+  0x1b
+]);
 const WebSocket = require("ws");
 const database = require("./classes/database.js");
 db = database.getDatabase();
@@ -132,8 +153,32 @@ class GameServer {
     return players;
   }
 
+  removeCurrentMatchFromPlayer(token, increaseGamesPlayed = false) {
+    const user = db
+      .get("clients")
+      .find({ uToken: token })
+      .value();
+
+    if (!user || !user.currentMatch) {
+      return true;
+    }
+    if (increaseGamesPlayed) {
+      db.get("clients")
+        .find({ uToken: token })
+        .update("gamesPlayed", n => n + 1)
+        .write();
+    }
+    db.get("clients")
+      .find({ uToken: token })
+      .unset("currentMatch")
+      .write();
+
+    return true;
+  }
+
   removePlayerFromActiveMatch(token) {
     // TODO: If player is in a current match, update the queue and let the opponent win!
+
     const user = db
       .get("clients")
       .find({ uToken: token })
@@ -156,10 +201,6 @@ class GameServer {
       .remove({ uToken: token })
       .write();
 
-    db.get("clients")
-      .find({ uToken: token })
-      .unset("currentMatch")
-      .write();
     return true;
   }
 }

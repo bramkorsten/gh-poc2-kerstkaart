@@ -74,7 +74,6 @@ function getFirstEmptyMatch() {
     .get("matches")
     .find({ matchFull: false })
     .value();
-  console.log(match);
   if (!match) {
     return false;
   }
@@ -285,7 +284,11 @@ module.exports = {
       const newUser = {
         uToken: token,
         name: user.name,
-        gamesPlayed: 0
+        gamesPlayed: 0,
+        highscore: {
+          currentStreak: 0,
+          bestStreak: 0
+        }
       };
       db.get("clients")
         .push(newUser)
@@ -361,8 +364,8 @@ module.exports = {
       // TODO: Set Highscores and remove players from match
       gameServer.sendMessageToMatch(match.matchId, "matchResults", results);
       const players = gameServer.getPlayersInMatch(match.matchId);
-      for (var uToken in players) {
-        gameServer.removePlayerFromActiveMatch(uToken);
+      for (var i in players) {
+        gameServer.removeCurrentMatchFromPlayer(players[i], true);
       }
       removeMatch(match.matchId);
       return true;
