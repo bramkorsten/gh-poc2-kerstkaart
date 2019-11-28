@@ -178,7 +178,7 @@ module.exports = {
         .write();
       const response = {
         type: "userUpdate",
-        message: newUser
+        data: newUser
       };
       ws.send(JSON.stringify(response));
     } else {
