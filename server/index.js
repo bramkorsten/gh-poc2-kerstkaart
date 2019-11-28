@@ -3,7 +3,7 @@
  * @Email:  code@bramkorsten.nl
  * @Project: Kerstkaart (server)
  * @Filename: index.js
- * @Last modified time: 2019-10-29T13:55:09+01:00
+ * @Last modified time: 2019-11-27T16:08:32+01:00
  * @Copyright: Copyright 2019 - Bram Korsten
  */
 const config = require("./_config.json");
@@ -42,7 +42,7 @@ class GameServer {
         } else {
           const response = {
             type: "error",
-            message: parsedMessage.type + " is not a valid function"
+            data: parsedMessage.type + " is not a valid function"
           };
           ws.send(JSON.stringify(response));
         }
@@ -90,7 +90,7 @@ class GameServer {
 
     const response = {
       type: "matchUpdate",
-      message: matchVal
+      data: matchVal
     };
     for (var player of players) {
       console.log("sending update to: " + player);
@@ -102,21 +102,29 @@ class GameServer {
     }
   }
 
+  sendMessageToMatch(matchId, messageType, message) {
+    const players = this.getPlayersInMatch(matchId);
+    const response = {
+      type: messageType,
+      data: message
+    };
+    for (var player of players) {
+      console.log("sending message to: " + player);
+      if (connections.hasOwnProperty(player)) {
+        connections[player].send(JSON.stringify(response));
+      } else {
+        console.log("player in match not connected");
+      }
+    }
+  }
+
   getPlayersInMatch(matchId) {
-    // TODO: Make this one query?
-    const mainPlayers = db
+    const players = db
       .get("matches")
       .find({ matchId: matchId })
       .get("currentGame.players")
       .map("uToken")
       .value();
-    const queuePlayers = db
-      .get("matches")
-      .find({ matchId: matchId })
-      .get("queue")
-      .map("uToken")
-      .value();
-    const players = mainPlayers.concat(queuePlayers);
     return players;
   }
 
@@ -133,6 +141,7 @@ class GameServer {
 
     db.get("matches")
       .find({ matchId: user.currentMatch })
+      .assign({ matchFull: false })
       .get("currentGame.players")
       .remove({ uToken: token })
       .write();

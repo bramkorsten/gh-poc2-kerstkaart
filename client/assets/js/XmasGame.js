@@ -1,5 +1,9 @@
+var connection = new Connection();
+
 class XmasGame {
   constructor() {
+    this.logic = new GameLogic();
+    this.server = connection.server;
     this.gameControls = new GameControls();
     this.models = new GameModels(false);
     this.VREngine = new VREngine();
@@ -185,16 +189,9 @@ class XmasGame {
     this.reticle.visible = false;
     // this.scene.scale.set(1, 1, 1);
   }
-
-  playMatch() {
-    this.player1.hand.state.isWinning = true;
-    this.player2.hand.state.isWinning = false;
-    this.player1.hand.doShake("scissors");
-    this.player2.hand.doShake("paper");
-  }
 }
 
 $(function() {
   game = new XmasGame();
-  game.init();
+  // game.init();
 });
