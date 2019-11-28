@@ -1,13 +1,3 @@
-$(function() {
-  $("#setNameButton").click(function(e) {
-    const name = $("#nameField")[0].value;
-    if (name != "") {
-      game.client.setName(name).update();
-      game.connectToMatch();
-    }
-  });
-});
-
 function _getQueryVariable(variable) {
   var query = window.location.search.substring(1);
   var vars = query.split("&");
@@ -34,7 +24,10 @@ function getFunctions() {
       game.client.updateUser(data);
     },
     matchUpdate: function(data) {
-      console.log(data);
+      game.logic.updateMatch(data);
+    },
+    matchResults: function(data) {
+      game.logic.finishGame(data);
     }
   });
 }

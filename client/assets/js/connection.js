@@ -1,7 +1,8 @@
 class Connection {
   constructor(address = false) {
     this.isConnected = false;
-    this.address = "ws://28f0deef.ngrok.io";
+    this.connectionAttempts = 0;
+    this.address = "ws://kerstkaart.glitch.me";
     if (address) {
       this.address = address;
     }
@@ -13,9 +14,10 @@ class Connection {
   setupConnectionListeners() {
     this.server.onopen = function(event) {
       connection.isConnected = true;
+      connection.connectionAttempts = 0;
       console.log("Connected to server");
       if (!game.isInitialized) {
-        game.setupGame();
+        game.logic.setupClient();
       } else {
         connection.sendHandshake();
       }
@@ -24,7 +26,9 @@ class Connection {
     this.server.onclose = function(event) {
       connection.isConnected = false;
       console.log("Server connection lost...");
-      connection.reconnect();
+      if (connection.connectionAttempts < 5) {
+        connection.reconnect();
+      }
     };
 
     this.server.onerror = function(event) {
@@ -35,8 +39,8 @@ class Connection {
     this.server.onmessage = function(event) {
       const message = JSON.parse(event.data);
       console.log("Message Recieved of type: " + message.type);
-      if (game.sandbox[message.type] instanceof Function) {
-        game.sandbox[message.type](message.data);
+      if (game.logic.sandbox[message.type] instanceof Function) {
+        game.logic.sandbox[message.type](message.data);
       } else {
         console.log("not a function");
       }
@@ -45,6 +49,7 @@ class Connection {
 
   reconnect() {
     console.log("trying to reconnect...");
+    this.connectionAttempts++;
     this.server = new WebSocket(this.address);
     this.setupConnectionListeners();
   }
@@ -62,7 +67,7 @@ class Connection {
     const message = {
       uid: game.client.uid,
       type: type,
-      message: msg
+      message: msg || false
     };
     this.server.send(JSON.stringify(message));
   }

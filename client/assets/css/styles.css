@@ -118,6 +118,7 @@
   z-index: 1;
   user-select: none;
   cursor: pointer;
+  box-sizing: border-box;
   display: none;
 }
 .gameStartup .button span {
@@ -162,6 +163,7 @@
   left: 0;
   user-select: none;
   pointer-events: none;
+  overflow: hidden;
 }
 .gameOverlay .gameControls {
   position: absolute;
@@ -175,6 +177,20 @@
 .gameOverlay .gameControls .hands {
   display: flex;
   justify-content: space-between;
+  -webkit-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  transform: translateY(220px);
+}
+.gameOverlay .gameControls .hands.visible {
+  transform: translateY(0);
+}
+.gameOverlay .gameControls .hands.visible .hand {
+  pointer-events: auto;
+}
+.gameOverlay .gameControls .hands.visible .hand .image {
+  transform: none;
 }
 .gameOverlay .gameControls .hands .hand {
   margin: 0 15px;
@@ -184,17 +200,17 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  pointer-events: painted;
+  pointer-events: none;
   cursor: pointer;
 }
 .gameOverlay .gameControls .hands .hand .image {
   width: 100px;
   height: 100px;
-  transform: 0;
-  -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  -moz-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  -o-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
+  transform: translateY(20px) rotate(15deg);
+  -webkit-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
 }
 .gameOverlay .gameControls .hands .hand .text {
   margin-top: 15px;
@@ -251,8 +267,260 @@
   background-repeat: no-repeat;
 }
 .gameOverlay .gameControls .hands .hand:hover .image {
-  transform: rotate();
   transform: translateY(-20px) rotate(-15deg);
+}
+.gameOverlay .gameControls .buttons {
+  position: absolute;
+  width: 90%;
+  max-width: 250px;
+  transform: translateY(250px);
+  -webkit-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+}
+.gameOverlay .gameControls .buttons.visible {
+  transform: translateY(0);
+}
+.gameOverlay .gameControls .buttons .button {
+  pointer-events: auto;
+  margin: 10px 0;
+  width: 100%;
+}
+.gameOverlay .gameControls .buttons .button.again {
+  background-color: #1a6d38;
+  min-width: 130px;
+  min-height: 40px;
+  border-radius: 13px;
+  border: 3px solid #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  font-size: 14px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  text-transform: uppercase;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  user-select: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.gameOverlay .gameControls .buttons .button.again span {
+  padding: 11px 20px;
+}
+.gameOverlay .gameControls .buttons .button.again::before {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #2ebf62;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  bottom: 10%;
+  border-radius: 16px;
+}
+.gameOverlay .gameControls .buttons .button.again::after {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #fff;
+  width: 15px;
+  height: 8px;
+  z-index: -1;
+  top: 5px;
+  left: 5px;
+  border-radius: 50%;
+  transform: rotate(-20deg);
+}
+.gameOverlay .gameControls .buttons .button.again:hover::before {
+  background-color: #29aa57;
+}
+.gameOverlay .gameControls .buttons .button.stop {
+  background-color: #931414;
+  min-width: 130px;
+  min-height: 40px;
+  border-radius: 13px;
+  border: 3px solid #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  font-size: 14px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  text-transform: uppercase;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  user-select: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.gameOverlay .gameControls .buttons .button.stop span {
+  padding: 11px 20px;
+}
+.gameOverlay .gameControls .buttons .button.stop::before {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #e22b2b;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  bottom: 10%;
+  border-radius: 16px;
+}
+.gameOverlay .gameControls .buttons .button.stop::after {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #fff;
+  width: 15px;
+  height: 8px;
+  z-index: -1;
+  top: 5px;
+  left: 5px;
+  border-radius: 50%;
+  transform: rotate(-20deg);
+}
+.gameOverlay .gameControls .buttons .button.stop:hover::before {
+  background-color: #d61d1d;
+}
+.gameOverlay .informationOverlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+.gameOverlay .informationOverlay .versusBar {
+  width: 90%;
+  max-width: 400px;
+  background-color: #ba9969;
+  height: 40px;
+  border: 3px solid #000;
+  border-radius: 12px;
+  position: absolute;
+  z-index: 5;
+  overflow: hidden;
+  box-shadow: 0 1px 15px 0px #0009;
+  top: 70px;
+  left: 50%;
+  transform: translate(-50%, -140px) rotate(0);
+  -webkit-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+}
+.gameOverlay .informationOverlay .versusBar.visible {
+  transform: translate(-50%, 0) rotate(1deg);
+}
+.gameOverlay .informationOverlay .versusBar.visible .content span.text {
+  transform: translateY(0);
+}
+.gameOverlay .informationOverlay .versusBar.visible .content span#player1 {
+  transition-delay: 0.1s;
+}
+.gameOverlay .informationOverlay .versusBar.visible .content span#player2 {
+  transition-delay: 0.2s;
+}
+.gameOverlay .informationOverlay .versusBar::before {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #f8cc8c;
+  width: calc(100% + 5px);
+  height: 100%;
+  top: -5px;
+  left: -5px;
+  border-radius: 15px;
+  z-index: -1;
+}
+.gameOverlay .informationOverlay .versusBar::after {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #fff;
+  width: 16px;
+  height: 8px;
+  z-index: -1;
+  top: 4px;
+  left: 2px;
+  border-radius: 50%;
+  transform: rotate(-30deg);
+  z-index: 2;
+}
+.gameOverlay .informationOverlay .versusBar .content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  transform: translateY(-2px);
+}
+.gameOverlay .informationOverlay .versusBar .content span {
+  font-style: normal;
+  font-size: 16px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #000;
+}
+.gameOverlay .informationOverlay .versusBar .content span.text {
+  -webkit-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  transform: translateY(-20px);
+}
+.gameOverlay .informationOverlay .versusBar .content span.versus {
+  color: #471c72;
+  display: inline-block;
+  margin: 0 20px;
+  font-size: 28px;
+  transform: rotate(-5deg);
+}
+.gameOverlay .informationOverlay .messageScroll {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: url("../img/scroll.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 300px;
+  height: 150px;
+  -webkit-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+}
+.gameOverlay .informationOverlay .messageScroll.visible {
+  transform: translate(-50%, -50%) scale(1);
+}
+.gameOverlay .informationOverlay .messageScroll .text {
+  font-style: normal;
+  font-size: 32px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #000;
+  position: relative;
+  display: inline-block;
+  top: 60px;
+  left: 75px;
+  transform-origin: center center;
+  transform: rotate(-5deg);
+}
+.gameOverlay .informationOverlay .messageScroll .text .color {
+  color: #471c72;
 }
 .gameOverlay .menuIcons {
   position: absolute;
@@ -462,9 +730,34 @@
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), transparent);
   }
 }
+@media only screen and (max-width: 900px) {
+  .gameOverlay .informationOverlay .versusBar {
+    top: 150px;
+    transform: translate(-50%, -220px) rotate(0);
+  }
+}
 @media only screen and (max-width: 600px) {
+  .gameOverlay .informationOverlay .versusBar {
+    top: 85px;
+    transform: translate(-50%, -140px) rotate(0);
+  }
   .gameOverlay .menuIcons {
     padding: 25px 0 0;
+  }
+  .gameOverlay .menuIcons .icon {
+    width: 40px;
+  }
+  .gameOverlay .menuIcons .icon .image {
+    width: 30px;
+    height: 40px;
+    margin: 0 5px;
+  }
+  .gameOverlay .menuIcons .icon::after {
+    width: 40px;
+    height: 40px;
+  }
+  .gameOverlay .menuIcons .buttonContainer {
+    display: none;
   }
   .gameOverlay .menuIcons .flex {
     margin: 0 25px;

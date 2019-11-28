@@ -34,19 +34,39 @@
     </div>
     <div class="gameOverlay">
       <div class="gameControls">
-        <div class="hands">
-          <div class="hand rock">
+        <div id="hands" class="hands">
+          <div class="hand rock" onClick="game.logic.sendChoice('rock')">
             <div class="image"></div>
             <span class="text highlight">Steen</span>
           </div>
-          <div class="hand paper">
+          <div class="hand paper" onClick="game.logic.sendChoice('paper')">
             <div class="image"></div>
             <span class="text highlight">Papier</span>
           </div>
-          <div class="hand scissor">
+          <div class="hand scissor" onClick="game.logic.sendChoice('scissors')">
             <div class="image"></div>
             <span class="text highlight">Schaar</span>
           </div>
+        </div>
+        <div id="playAgainButtons" class="buttons">
+          <div class="button again" onClick="game.logic.resetGame()">
+            <span>Play Again</span>
+          </div>
+          <div class="button stop" onClick="game.logic.quitGame()">
+            <span>Stop Playing</span>
+          </div>
+        </div>
+      </div>
+      <div class="informationOverlay">
+        <div id="versusBar" class="versusBar">
+          <div class="content">
+            <span class="text" id="player1">Bram Korsten</span>
+            <span class="versus">VS</span>
+            <span class="text" id="player2">Kaan Tuncer</span>
+          </div>
+        </div>
+        <div id="winScroll" class="messageScroll">
+          <span class="text">You <span class="color">Won</span></span>
         </div>
       </div>
       <div class="menuIcons">
@@ -117,6 +137,7 @@
       src="assets/includes/three/controls/OrbitControls.js"
       charset="utf-8"
     ></script>
+    <script src="assets/js/Connection.js" charset="utf-8"></script>
     <script src="assets/js/GameControls.js" charset="utf-8"></script>
     <script src="assets/js/GameModels.js" charset="utf-8"></script>
     <script src="assets/js/HandController.js" charset="utf-8"></script>
@@ -124,10 +145,10 @@
     <script src="assets/js/VREngine.js" charset="utf-8"></script>
     <script src="assets/js/XmasGame.js" charset="utf-8"></script>
 
-    <!-- <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
-    <script src="assets/js/connection.js" charset="utf-8"></script>
-    <script src="assets/js/gamelogic.js" charset="utf-8"></script>
-    <script src="assets/js/client.js" charset="utf-8"></script>
-    <script src="assets/js/functions.js" charset="utf-8"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+
+    <script src="assets/js/Logic.js" charset="utf-8"></script>
+    <script src="assets/js/Client.js" charset="utf-8"></script>
+    <script src="assets/js/functions.js" charset="utf-8"></script>
   </body>
 </html>

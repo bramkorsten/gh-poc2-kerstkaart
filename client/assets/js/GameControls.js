@@ -2,6 +2,10 @@ class GameControls {
   constructor(game) {
     this.game = game;
     this.savedCameraPosition;
+    this.versusBarTimeout;
+    this.winnerScrollTimeout;
+
+    this.setupControlListeners();
   }
 
   addOnScreenControls(game) {
@@ -41,6 +45,16 @@ class GameControls {
     $(".loadingContainer").addClass("visible");
   }
 
+  setupControlListeners() {
+    $("#setNameButton").click(function(e) {
+      const name = $("#nameField")[0].value;
+      if (name != "") {
+        game.client.setName(name).update();
+        game.connectToMatch();
+      }
+    });
+  }
+
   switchMode(e) {
     if ($(e).data("mode") == "viewer") {
       $(e)
@@ -48,12 +62,15 @@ class GameControls {
         .addClass("game");
       $(e).data("mode", "game");
       this.goToGameCamera();
+      game.logic.requestGame();
     } else {
       $(e)
         .removeClass("game")
         .addClass("viewer");
       $(e).data("mode", "viewer");
       this.goToQueueCamera();
+      game.logic.state.isInGame = false;
+      // TODO: Ask for leave
     }
   }
 
@@ -120,5 +137,54 @@ class GameControls {
       .onComplete(function() {});
     tweenCameraTarget.easing(TWEEN.Easing.Quadratic.InOut);
     tweenCameraTarget.start();
+  }
+
+  showVersusBar(data) {
+    clearTimeout(this.versusBarTimeout);
+    const player1Name = data.currentGame.players[0].player.name;
+    const player2Name = data.currentGame.players[1].player.name;
+
+    $("#versusBar #player1").text(player1Name);
+    $("#versusBar #player2").text(player2Name);
+
+    $("#versusBar").addClass("visible");
+
+    this.showHandControls(true);
+
+    this.versusBarTimeout = setTimeout(function() {
+      $("#versusBar").removeClass("visible");
+    }, 5000);
+  }
+
+  showHandControls(visible) {
+    if (visible) {
+      $("#hands").addClass("visible");
+      return true;
+    } else {
+      $("#hands").removeClass("visible");
+      return false;
+    }
+  }
+
+  showWinnerScroll(text, textHighlight) {
+    clearTimeout(this.winnerScrollTimeout);
+    $("#winScroll .text").html(
+      text + " <span class='color'>" + textHighlight + "</span>"
+    );
+    $("#winScroll").addClass("visible");
+  }
+
+  hideWinnerScroll() {
+    $("#winScroll").removeClass("visible");
+  }
+
+  showRestartButtons(visible) {
+    if (visible) {
+      $("#playAgainButtons").addClass("visible");
+      return true;
+    } else {
+      $("#playAgainButtons").removeClass("visible");
+      return false;
+    }
   }
 }

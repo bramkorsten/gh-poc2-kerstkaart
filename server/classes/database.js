@@ -10,6 +10,6 @@ module.exports = {
   },
 
   setDefaults: function() {
-    db.defaults({ matches: [], clients: [], count: 0 }).write();
+    db.defaults({ matches: [], clients: [], highscores: [] }).write();
   }
 };

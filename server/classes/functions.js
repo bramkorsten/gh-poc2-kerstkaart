@@ -1,4 +1,5 @@
 // TODO: Optimize database writes by only calling write() once
+const validChoices = ["rock", "paper", "scissors", 1, 2, 3];
 
 function isValidUser(token) {
   const user = db
@@ -12,7 +13,6 @@ function isValidUser(token) {
 }
 
 function isValidChoice(choice) {
-  const validChoices = ["rock", "paper", "scissors"];
   return validChoices.includes(choice);
 }
 
@@ -54,26 +54,71 @@ function getMatch(matchId) {
   return match;
 }
 
-function createMatch(user, matchId) {
+function removeMatch(matchId) {
+  db.get("matches")
+    .remove({ matchId: matchId })
+    .write();
+}
+
+function setMatchWon(matchId, winner) {
+  const match = db
+    .get("matches")
+    .find({ matchId: matchId })
+    .assign({ matchWonBy: winner })
+    .write();
+  return match;
+}
+
+function getFirstEmptyMatch() {
+  const match = db
+    .get("matches")
+    .find({ matchFull: false })
+    .value();
+  console.log(match);
+  if (!match) {
+    return false;
+  }
+  return match;
+}
+
+function generateMatchId() {
+  var newMatchId = Math.random()
+    .toString(36)
+    .substr(2, 9);
+  // TODO: Might be over complicated / slow?
+  while (getMatch(newMatchId)) {
+    newMatchId = Math.random()
+      .toString(36)
+      .substr(2, 9);
+  }
+  return newMatchId;
+}
+
+function createMatch(user) {
+  const newMatchId = generateMatchId();
+  console.log("Creating match with id: " + newMatchId);
   const match = {
-    matchId: matchId,
+    matchId: newMatchId,
+    matchFull: false,
+    matchWonBy: undefined,
+    matchStartTime: undefined,
+    matchEndTime: undefined,
     initializer: user,
     currentGame: {
       players: [
         {
           uToken: user.uToken,
           player: user,
-          choice: 0,
+          choice: undefined,
           streak: 0
         }
       ]
-    },
-    queue: [],
-    highscores: []
+    }
   };
   db.get("matches")
     .push(match)
     .write();
+  setUserMatch(user, match.matchId);
   return match;
 }
 
@@ -94,7 +139,7 @@ function setUserMatch(user, matchId) {
     .assign({ currentMatch: matchId })
     .write();
 }
-// TODO: Rewrite to token
+
 function setUserChoice(token, matchId, choice) {
   db.get("matches")
     .find({ matchId: matchId })
@@ -103,6 +148,88 @@ function setUserChoice(token, matchId, choice) {
     .assign({ choice: choice })
     .write();
   return getMatch(matchId);
+}
+
+function allChoicesMade(match) {
+  var choices = {
+    player1: {
+      uToken: 0,
+      choice: 0
+    },
+    player2: {
+      uToken: 0,
+      choice: 0
+    }
+  };
+
+  var player1MadeChoice = false;
+  var player2MadeChoice = false;
+
+  if (
+    match.currentGame.players[0] &&
+    match.currentGame.players[0].choice != undefined
+  ) {
+    player1MadeChoice = true;
+    choices.player1.choice = match.currentGame.players[0].choice;
+    choices.player1.uToken = match.currentGame.players[0].uToken;
+    choices.player1.name = match.currentGame.players[0].player.name;
+  }
+
+  if (
+    match.currentGame.players[1] &&
+    match.currentGame.players[1].choice != undefined
+  ) {
+    player2MadeChoice = true;
+    choices.player2.choice = match.currentGame.players[1].choice;
+    choices.player2.uToken = match.currentGame.players[1].uToken;
+    choices.player2.name = match.currentGame.players[1].player.name;
+  }
+
+  if (player1MadeChoice && player2MadeChoice) {
+    return choices;
+  }
+  return false;
+}
+
+function calculateWinner(matchId, choices) {
+  const choice1 = choices.player1.choice;
+  const choice2 = choices.player2.choice;
+
+  if (choice1 == choice2) {
+    choices.result = "tie";
+    setMatchWon(matchId, choices.result);
+    return choices;
+  }
+
+  switch (choice1) {
+    case "rock":
+      if (choice2 == "paper") {
+        choices.result = "2";
+      } else {
+        choices.result = "1";
+      }
+      break;
+    case "paper":
+      if (choice2 == "scissors") {
+        choices.result = "2";
+      } else {
+        choices.result = "1";
+      }
+      break;
+    case "scissors":
+      if (choice2 == "rock") {
+        choices.result = "2";
+      } else {
+        choices.result = "1";
+      }
+      break;
+    default:
+      console.log("Something went terribly wrong here...");
+      console.log(choices);
+      return false;
+  }
+  setMatchWon(matchId, choices.result);
+  return choices;
 }
 
 function placeUserInMatch(user, match) {
@@ -115,36 +242,23 @@ function placeUserInMatch(user, match) {
       return match;
     }
   }
-  for (var player of match.queue) {
-    if (player.uToken == user.uToken) {
-      console.log("Player already in queue");
-      return match;
-    }
-  }
   if (match.currentGame.players.length != 2) {
     const player = {
       uToken: user.uToken,
       player: user,
-      choice: 0,
+      choice: undefined,
       streak: 0
     };
     match.currentGame.players.push(player);
+    match.matchFull = true;
     db.get("matches")
       .find({ matchId: match.matchId })
       .assign(match)
       .write();
     return match;
   } else {
-    const player = {
-      uToken: user.uToken,
-      player: user
-    };
-    match.queue.push(player);
-    db.get("matches")
-      .find({ matchId: match.matchId })
-      .assign(match)
-      .write();
-    return match;
+    console.log("Game is full");
+    return false;
   }
 }
 
@@ -209,13 +323,16 @@ module.exports = {
     if (!user) {
       return sendInvalidUser(ws);
     }
-    const matchId = message.message;
-    if ((match = getMatch(matchId))) {
-      match = placeUserInMatch(user, match);
-      gameServer.sendUpdateToMatch(match.matchId);
-      return true;
+    if (!user.currentMatch) {
+      match = getFirstEmptyMatch();
+    } else {
+      match = getMatch(user.currentMatch);
     }
-    match = createMatch(user, matchId);
+    if (match) {
+      placeUserInMatch(user, match);
+    } else {
+      match = createMatch(user);
+    }
     gameServer.sendUpdateToMatch(match.matchId);
     return true;
   },
@@ -229,11 +346,28 @@ module.exports = {
     if (!dbUser.currentMatch) {
       return sendUserNotInMatch(ws);
     }
-    const choice = message.message.choice;
+    var choice = message.message.choice;
     if (!choice || !isValidChoice(choice)) {
       return sendInvalidChoice(ws);
     }
+    if (typeof choice == "number") {
+      choice = validChoices[choice - 1];
+    }
+
     const match = setUserChoice(dbUser.uToken, dbUser.currentMatch, choice);
+    var choices;
+    if ((choices = allChoicesMade(match))) {
+      results = calculateWinner(match.matchId, choices);
+      // TODO: Set Highscores and remove players from match
+      gameServer.sendMessageToMatch(match.matchId, "matchResults", results);
+      const players = gameServer.getPlayersInMatch(match.matchId);
+      for (var uToken in players) {
+        gameServer.removePlayerFromActiveMatch(uToken);
+      }
+      removeMatch(match.matchId);
+      return true;
+    }
+
     gameServer.sendUpdateToMatch(match.matchId);
     return true;
   }

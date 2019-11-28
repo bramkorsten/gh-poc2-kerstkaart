@@ -84,7 +84,6 @@ class HandController {
       listener = this.mixer.addEventListener("loop", function _loop(e) {
         handle.mixer.removeEventListener("loop", _loop);
         if (e.action == handle.actions.idle) {
-          console.log(e);
           handle.stopIdleLoop();
           handle.actions.startShaking.play();
           handle.mixer.addEventListener("finished", function _finished(e) {
