@@ -69,6 +69,39 @@ function setMatchWon(matchId, winner) {
   return match;
 }
 
+function increaseStreakForPlayer(user) {
+  const newScore = user.highscore.currentStreak + 1;
+  if (user.highscore.bestStreak == user.highscore.currentStreak) {
+    db.get("clients")
+      .find({ uToken: user.uToken })
+      .get("highscore")
+      .assign({
+        currentStreak: newScore,
+        bestStreak: newScore
+      })
+      .write();
+  } else {
+    db.get("clients")
+      .find({ uToken: user.uToken })
+      .get("highscore")
+      .assign({
+        currentStreak: newScore
+      })
+      .write();
+  }
+}
+
+function resetStreakForPlayer(user) {
+  const dbUser = db
+    .get("clients")
+    .find({ uToken: user.uToken })
+    .get("highscore")
+    .assign({
+      currentStreak: 0
+    })
+    .write();
+}
+
 function getFirstEmptyMatch() {
   const match = db
     .get("matches")
@@ -124,7 +157,7 @@ function createMatch(user) {
 function getUserMatch(user) {
   const dbUser = db
     .get("clients")
-    .find({ token: user.uToken })
+    .find({ uToken: user.uToken })
     .value();
   if (dbUser.currentMatch) {
     return dbUser.currentMatch;
@@ -363,8 +396,22 @@ module.exports = {
       results = calculateWinner(match.matchId, choices);
       // TODO: Set Highscores and remove players from match
       gameServer.sendMessageToMatch(match.matchId, "matchResults", results);
+      const player1 = isValidUser(results.player1.uToken);
+      const player2 = isValidUser(results.player2.uToken);
+      if (results.result == 1) {
+        console.log("player1Won");
+        increaseStreakForPlayer(player1);
+        resetStreakForPlayer(player2);
+      }
+      if (results.result == 2) {
+        console.log("Player2Won");
+        increaseStreakForPlayer(player2);
+        resetStreakForPlayer(player1);
+      }
       const players = gameServer.getPlayersInMatch(match.matchId);
       for (var i in players) {
+        if (results.result == i + 1) {
+        }
         gameServer.removeCurrentMatchFromPlayer(players[i], true);
       }
       removeMatch(match.matchId);
