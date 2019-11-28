@@ -27,9 +27,16 @@
           Merry Christmas!
         </p>
       </div>
-
-      <div class="startGameButton button visible" onClick="game.init()">
-        <span>Start Game</span>
+      <div id="nameField" class="nameField visible">
+        <input
+          id="nameInput"
+          class="nameInput"
+          type="name"
+          placeholder="ENTER YOUR NAME"
+        />
+        <div class="startGameButton button disabled">
+          <span>Start Game</span>
+        </div>
       </div>
     </div>
     <div class="gameOverlay">
@@ -58,6 +65,15 @@
         </div>
       </div>
       <div class="informationOverlay">
+        <div id="loadingText" class="loadingText visible">
+          <div class="left">
+            <div class="loadingAnimation grey"></div>
+          </div>
+          <div class="right">
+            <span class="text text1">Waiting for opponents</span>
+            <span class="text text2">Joining game!</span>
+          </div>
+        </div>
         <div id="versusBar" class="versusBar">
           <div class="content">
             <span class="text" id="player1">Bram Korsten</span>

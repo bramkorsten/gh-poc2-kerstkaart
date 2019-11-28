@@ -80,12 +80,41 @@
     }
   }
 
-  .button {
-    margin-top: 50px;
-    .defaultButton();
+  .nameField {
+    margin: 50px 0 0;
     display: none;
+    width: 90%;
+    max-width: 450px;
+    justify-content: center;
 
     &.visible {
+      display: flex;
+    }
+
+    &.returningUser {
+      .nameInput {
+        display: none;
+      }
+    }
+
+    .nameInput {
+      .defaultBoldFont();
+      padding: 10px 20px;
+      margin: 0 20px 0 0;
+      border-radius: 10px;
+      border: 3px solid @black;
+      flex-grow: 1;
+      flex-shrink: 0;
+      overflow: hidden;
+      position: relative;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    .button {
+      .defaultButton();
       display: flex;
     }
   }

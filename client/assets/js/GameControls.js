@@ -5,7 +5,7 @@ class GameControls {
     this.versusBarTimeout;
     this.winnerScrollTimeout;
 
-    this.setupControlListeners();
+    this.attachUIListeners();
   }
 
   addOnScreenControls(game) {
@@ -41,18 +41,48 @@ class GameControls {
   }
 
   setupLoadingScreen() {
-    $(".gameInformation, .startGameButton").removeClass("visible");
+    $(".gameInformation, .nameField").removeClass("visible");
     $(".loadingContainer").addClass("visible");
   }
 
-  setupControlListeners() {
-    $("#setNameButton").click(function(e) {
-      const name = $("#nameField")[0].value;
-      if (name != "") {
-        game.client.setName(name).update();
-        game.connectToMatch();
+  attachUIListeners() {
+    if (client.isExistingUser) {
+      $("#nameField").addClass("returningUser");
+      $(".startGameButton").removeClass("disabled");
+    } else {
+      $("#nameInput").on("input", function(e) {
+        if (isValidInput($("#nameInput").val())) {
+          $(".startGameButton").removeClass("disabled");
+        } else {
+          $(".startGameButton").addClass("disabled");
+        }
+      });
+    }
+
+    $(".startGameButton").click(function() {
+      if (isValidInput($("#nameInput").val()) || client.isExistingUser) {
+        if (!client.isExistingUser) {
+          game.client.setName($("#nameInput").val()).update();
+        }
+        game.init();
+      } else {
+        return false;
       }
     });
+
+    function isValidInput(input) {
+      if (input && input.length > 3) {
+        return true;
+      }
+      return false;
+    }
+    // $("#setNameButton").click(function(e) {
+    //   const name = $("#nameField")[0].value;
+    //   if (name != "") {
+    //     game.client.setName(name).update();
+    //     game.connectToMatch();
+    //   }
+    // });
   }
 
   switchMode(e) {
@@ -149,8 +179,6 @@ class GameControls {
 
     $("#versusBar").addClass("visible");
 
-    this.showHandControls(true);
-
     this.versusBarTimeout = setTimeout(function() {
       $("#versusBar").removeClass("visible");
     }, 5000);
@@ -187,4 +215,85 @@ class GameControls {
       return false;
     }
   }
+
+  loadingText = {
+    timeout: false,
+    show: function(visible = true) {
+      clearTimeout(this.timeout);
+      if (visible) {
+        $("#loadingText").addClass("visible");
+        return this;
+      } else {
+        $("#loadingText").removeClass("visible");
+        return this;
+      }
+    },
+    toggleLine: function() {
+      $("#loadingText .right").toggleClass("line2");
+    },
+    getCurrentLine: function() {
+      if ($("#loadingText .right").hasClass("line2")) {
+        return 2;
+      } else {
+        return 1;
+      }
+    },
+    changeTextAndToggle: function(text) {
+      if (this.getCurrentLine() == 1) {
+        this.changeTextOnLine(text, 2);
+      } else {
+        this.changeTextOnLine(text, 1);
+      }
+      this.toggleLine();
+      clearTimeout(this.timeout);
+      this.show();
+      return this;
+    },
+    changeTextOnLine: function(text, line) {
+      if (line == 1) {
+        $("#loadingText .right .text1").text(text);
+      } else {
+        $("#loadingText .right .text2").text(text);
+      }
+      return this;
+    },
+    changeColor: function(color) {
+      switch (color) {
+        case "red":
+          $("#loadingText .loadingAnimation")
+            .removeClass("red grey purple green")
+            .addClass("red");
+          break;
+        case "green":
+          $("#loadingText .loadingAnimation")
+            .removeClass("red grey purple green")
+            .addClass("green");
+          break;
+        case "purple":
+          $("#loadingText .loadingAnimation")
+            .removeClass("red grey purple green")
+            .addClass("purple");
+          break;
+        case "grey":
+          $("#loadingText .loadingAnimation")
+            .removeClass("red grey purple green")
+            .addClass("grey");
+          break;
+        default:
+          console.warn("Unknown color. Reset to grey");
+          $("#loadingText .loadingAnimation").removeClass(
+            "red grey purple green"
+          );
+      }
+      return this;
+    },
+    removeInMillis: function(milliseconds) {
+      clearTimeout(this.timeout);
+      const handle = this;
+      this.timeout = setTimeout(function() {
+        handle.show(false);
+      }, milliseconds);
+      return this;
+    }
+  };
 }

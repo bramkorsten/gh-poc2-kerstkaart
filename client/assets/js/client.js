@@ -3,15 +3,18 @@
  * @Email:  code@bramkorsten.nl
  * @Project: Kerstkaart 2019
  * @Filename: client.js
- * @Last modified time: 2019-11-27T10:52:35+01:00
+ * @Last modified time: 2019-11-28T16:40:04+01:00
  * @Copyright: Copyright 2019 - Bram Korsten
  */
+
+var client;
 
 class Client {
   constructor() {
     this.uid = 0;
     this.isInitialized = false;
     this.isExistingUser = false;
+    client = this;
     return this;
   }
 
@@ -19,6 +22,8 @@ class Client {
     if (Cookies.get("gameClientID")) {
       this.uid = Cookies.get("gameClientID");
       this.isExistingUser = true;
+      console.log("Welcome back!");
+
       return this;
     } else {
       this.uid =
@@ -27,6 +32,7 @@ class Client {
           .toString(36)
           .substr(2, 9);
       Cookies.set("gameClientID", this.uid, { expires: 365 });
+      console.log("Welcome to the game, new player!");
       return this;
     }
   }

@@ -3,6 +3,8 @@ var connection = new Connection();
 class XmasGame {
   constructor() {
     this.logic = new GameLogic();
+    this.client = new Client();
+    this.client.init();
     this.server = connection.server;
     this.gameControls = new GameControls();
     this.models = new GameModels(false);

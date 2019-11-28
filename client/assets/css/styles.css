@@ -96,15 +96,43 @@
 .gameStartup .gameInformation p {
   margin: 15px 0;
 }
-.gameStartup .button {
-  margin-top: 50px;
+.gameStartup .nameField {
+  margin: 50px 0 0;
+  display: none;
+  width: 90%;
+  max-width: 450px;
+  justify-content: center;
+}
+.gameStartup .nameField.visible {
+  display: flex;
+}
+.gameStartup .nameField.returningUser .nameInput {
+  display: none;
+}
+.gameStartup .nameField .nameInput {
+  font-style: normal;
+  font-size: 14px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  padding: 10px 20px;
+  margin: 0 20px 0 0;
+  border-radius: 10px;
+  border: 3px solid #000;
+  flex-grow: 1;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+}
+.gameStartup .nameField .nameInput:focus {
+  outline: none;
+}
+.gameStartup .nameField .button {
   background-color: #931414;
   min-width: 130px;
   min-height: 40px;
   border-radius: 13px;
   border: 3px solid #000;
   color: #fff;
-  display: flex;
   align-items: center;
   justify-content: center;
   font-style: normal;
@@ -119,12 +147,12 @@
   user-select: none;
   cursor: pointer;
   box-sizing: border-box;
-  display: none;
+  display: flex;
 }
-.gameStartup .button span {
+.gameStartup .nameField .button span {
   padding: 11px 20px;
 }
-.gameStartup .button::before {
+.gameStartup .nameField .button::before {
   content: "";
   display: block;
   position: absolute;
@@ -135,7 +163,7 @@
   bottom: 10%;
   border-radius: 16px;
 }
-.gameStartup .button::after {
+.gameStartup .nameField .button::after {
   content: "";
   display: block;
   position: absolute;
@@ -148,11 +176,29 @@
   border-radius: 50%;
   transform: rotate(-20deg);
 }
-.gameStartup .button:hover::before {
+.gameStartup .nameField .button:hover::before {
   background-color: #d61d1d;
 }
-.gameStartup .button.visible {
-  display: flex;
+.gameStartup .nameField .button.disabled {
+  background-color: #626262;
+  pointer-events: none;
+}
+.gameStartup .nameField .button.disabled::before {
+  background-color: #959595;
+}
+.gameStartup .nameField .button.disabled:hover::before {
+  background-color: #888888;
+}
+@keyframes wiggle {
+  0% {
+    transform: translateX(-10px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+  100% {
+    transform: translateX(-10px);
+  }
 }
 .gameOverlay {
   width: 100%;
@@ -340,6 +386,16 @@
 .gameOverlay .gameControls .buttons .button.again:hover::before {
   background-color: #29aa57;
 }
+.gameOverlay .gameControls .buttons .button.again.disabled {
+  background-color: #626262;
+  pointer-events: none;
+}
+.gameOverlay .gameControls .buttons .button.again.disabled::before {
+  background-color: #959595;
+}
+.gameOverlay .gameControls .buttons .button.again.disabled:hover::before {
+  background-color: #888888;
+}
 .gameOverlay .gameControls .buttons .button.stop {
   background-color: #931414;
   min-width: 130px;
@@ -393,12 +449,101 @@
 .gameOverlay .gameControls .buttons .button.stop:hover::before {
   background-color: #d61d1d;
 }
+.gameOverlay .gameControls .buttons .button.stop.disabled {
+  background-color: #626262;
+  pointer-events: none;
+}
+.gameOverlay .gameControls .buttons .button.stop.disabled::before {
+  background-color: #959595;
+}
+.gameOverlay .gameControls .buttons .button.stop.disabled:hover::before {
+  background-color: #888888;
+}
 .gameOverlay .informationOverlay {
   position: absolute;
   width: 100%;
   height: 100%;
   pointer-events: none;
   user-select: none;
+}
+.gameOverlay .informationOverlay .loadingText {
+  opacity: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: absolute;
+  top: 36px;
+  left: 20px;
+  -webkit-transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+}
+.gameOverlay .informationOverlay .loadingText.visible {
+  opacity: 1;
+}
+.gameOverlay .informationOverlay .loadingText.visible .right {
+  transform: translateY(0);
+}
+.gameOverlay .informationOverlay .loadingText .left {
+  margin-right: 20px;
+}
+.gameOverlay .informationOverlay .loadingText .loadingAnimation {
+  width: 10px;
+  height: 10px;
+  transform-origin: center;
+  animation: wiggle 1s infinite;
+  position: relative;
+}
+.gameOverlay .informationOverlay .loadingText .loadingAnimation::after {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  background-color: #959595;
+  -webkit-transition: all 0.3s cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 0.3s cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 0.3s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 0.3s cubic-bezier(0.77, 0, 0.175, 1);
+}
+.gameOverlay .informationOverlay .loadingText .loadingAnimation.grey::after {
+  background-color: #959595;
+}
+.gameOverlay .informationOverlay .loadingText .loadingAnimation.red::after {
+  background-color: #e22b2b;
+}
+.gameOverlay .informationOverlay .loadingText .loadingAnimation.green::after {
+  background-color: #2ebf62;
+}
+.gameOverlay .informationOverlay .loadingText .loadingAnimation.purple::after {
+  background-color: #471c72;
+}
+.gameOverlay .informationOverlay .loadingText .right {
+  height: 18px;
+  overflow: hidden;
+  transform: translateY(-5px);
+  -webkit-transition: all 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+}
+.gameOverlay .informationOverlay .loadingText .right .text {
+  font-style: normal;
+  font-size: 14px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  color: #000;
+  display: block;
+  -webkit-transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+}
+.gameOverlay .informationOverlay .loadingText .right.line2 .text {
+  transform: translateY(-18px);
 }
 .gameOverlay .informationOverlay .versusBar {
   width: 90%;
@@ -737,6 +882,12 @@
   }
 }
 @media only screen and (max-width: 600px) {
+  .gameStartup .nameField {
+    flex-direction: column;
+  }
+  .gameStartup .nameField .nameInput {
+    margin: 0 0 20px;
+  }
   .gameOverlay .informationOverlay .versusBar {
     top: 85px;
     transform: translate(-50%, -140px) rotate(0);

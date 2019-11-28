@@ -95,6 +95,21 @@
       background-color: darken(@background-color, 5%);
     }
   }
+
+  &.disabled {
+    background-color: darken(@darkGrey, 20%);
+    pointer-events: none;
+
+    &::before {
+      background-color: @darkGrey;
+    }
+
+    &:hover {
+      &::before {
+        background-color: darken(@darkGrey, 5%);
+      }
+    }
+  }
 }
 
 .defaultHighlight(@background-color: @darkPurple) {

@@ -3,7 +3,7 @@
  * @Email:  code@bramkorsten.nl
  * @Project: Kerstkaart 2019
  * @Filename: gamelogic.js
- * @Last modified time: 2019-11-27T16:34:19+01:00
+ * @Last modified time: 2019-11-28T16:51:19+01:00
  * @Copyright: Copyright 2019 - Bram Korsten
  */
 
@@ -20,8 +20,8 @@ class GameLogic {
   }
 
   setupClient() {
-    game.client = new Client();
-    game.client.init();
+    // game.client = new Client();
+    // game.client.init();
     connection.sendHandshake();
     if (game.client.isExistingUser) {
       game.client.getFromServer();
@@ -35,28 +35,60 @@ class GameLogic {
     connection.sendMessage("requestMatch");
   }
 
+  forfeitGame() {
+    connection.sendMessage("forfeitGame");
+  }
+
+  startGame(data) {
+    game.gameControls.loadingText
+      .changeColor("green")
+      .changeTextAndToggle("Opponent found!")
+      .removeInMillis(2000);
+    game.gameControls.showVersusBar(data);
+    game.gameControls.showHandControls(true);
+    this.setPlayerNumber(data);
+  }
+
+  updateGame(data) {
+    console.log("Update Game");
+  }
+
   updateMatch(data) {
-    if (!this.state.isInGame) {
-      console.log("isnotingame");
+    if (!this.state.isInGame && data.matchFull) {
+      // New Match! Let's go
       this.state.isInGame = true;
-      if (data.matchFull) {
-        console.log("showbar");
-        game.gameControls.showVersusBar(data);
-      }
+      this.startGame(data);
+    } else if (!this.state.isInGame) {
+      game.gameControls.loadingText
+        .changeColor("purple")
+        .changeTextAndToggle("Waiting for opponent");
+    } else {
+      this.updateGame(data);
     }
   }
 
   finishGame(results) {
     switch (results.result) {
       case "1":
-        game.player1.hand.state.isWinning = true;
-        game.player2.hand.state.isWinning = false;
+        if (this.state.isPlayer1) {
+          game.player1.hand.state.isWinning = true;
+          game.player2.hand.state.isWinning = false;
+        } else {
+          game.player1.hand.state.isWinning = false;
+          game.player2.hand.state.isWinning = true;
+        }
         break;
       case "2":
-        game.player1.hand.state.isWinning = false;
-        game.player2.hand.state.isWinning = true;
+        if (this.state.isPlayer1) {
+          game.player1.hand.state.isWinning = false;
+          game.player2.hand.state.isWinning = true;
+        } else {
+          game.player1.hand.state.isWinning = true;
+          game.player2.hand.state.isWinning = false;
+        }
         break;
       case "tie":
+        // TODO: Fix animation for tied state
         game.player1.hand.state.isWinning = false;
         game.player2.hand.state.isWinning = false;
         break;
@@ -90,5 +122,13 @@ class GameLogic {
   sendChoice(choice) {
     game.gameControls.showHandControls(false);
     connection.sendMessage("setChoice", { choice: choice });
+  }
+
+  setPlayerNumber(data) {
+    if (data.initializer.uToken == game.client.token) {
+      this.state.isPlayer1 = true;
+    } else {
+      this.state.isPlayer1 = false;
+    }
   }
 }

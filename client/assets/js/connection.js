@@ -2,7 +2,7 @@ class Connection {
   constructor(address = false) {
     this.isConnected = false;
     this.connectionAttempts = 0;
-    this.address = "ws://kerstkaart.glitch.me";
+    this.address = "ws://7995ea7c.ngrok.io";
     if (address) {
       this.address = address;
     }
@@ -16,6 +16,10 @@ class Connection {
       connection.isConnected = true;
       connection.connectionAttempts = 0;
       console.log("Connected to server");
+      game.gameControls.loadingText
+        .changeColor("green")
+        .changeTextAndToggle("Connected!")
+        .removeInMillis(2000);
       if (!game.isInitialized) {
         game.logic.setupClient();
       } else {
@@ -26,9 +30,14 @@ class Connection {
     this.server.onclose = function(event) {
       connection.isConnected = false;
       console.log("Server connection lost...");
-      if (connection.connectionAttempts < 5) {
-        connection.reconnect();
-      }
+      game.gameControls.loadingText
+        .changeColor("red")
+        .changeTextAndToggle("Connection lost...");
+      setTimeout(function() {
+        if (connection.connectionAttempts < 5) {
+          connection.reconnect();
+        }
+      }, 2000);
     };
 
     this.server.onerror = function(event) {
@@ -49,6 +58,9 @@ class Connection {
 
   reconnect() {
     console.log("trying to reconnect...");
+    game.gameControls.loadingText
+      .changeColor("purple")
+      .changeTextAndToggle("Reconnecting");
     this.connectionAttempts++;
     this.server = new WebSocket(this.address);
     this.setupConnectionListeners();
