@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>POC2</title>
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body>
+    <div class="gameStartup visible">
+      <div class="logo"></div>
+      <div class="loadingContainer">
+        <div class="loadingBar">
+          <div id="loadingBar" class="loadingDone"></div>
+        </div>
+        <div class="loadingMessage">
+          <span id="loadingMessage" class="message">Loading models</span>
+        </div>
+      </div>
+
+      <div class="gameInformation visible">
+        <p>
+          Warning! This game is kinda large. Please make sure to use a large
+          enough data plan, or preferrably wifi!
+        </p>
+        <p>
+          Merry Christmas!
+        </p>
+      </div>
+
+      <div class="startGameButton button visible" onClick="game.init()">
+        <span>Start Game</span>
+      </div>
+    </div>
+    <div class="gameOverlay">
+      <div class="gameControls">
+        <div id="hands" class="hands">
+          <div class="hand rock" onClick="game.logic.sendChoice('rock')">
+            <div class="image"></div>
+            <span class="text highlight">Steen</span>
+          </div>
+          <div class="hand paper" onClick="game.logic.sendChoice('paper')">
+            <div class="image"></div>
+            <span class="text highlight">Papier</span>
+          </div>
+          <div class="hand scissor" onClick="game.logic.sendChoice('scissors')">
+            <div class="image"></div>
+            <span class="text highlight">Schaar</span>
+          </div>
+        </div>
+        <div id="playAgainButtons" class="buttons">
+          <div class="button again" onClick="game.logic.resetGame()">
+            <span>Play Again</span>
+          </div>
+          <div class="button stop" onClick="game.logic.quitGame()">
+            <span>Stop Playing</span>
+          </div>
+        </div>
+      </div>
+      <div class="informationOverlay">
+        <div id="versusBar" class="versusBar">
+          <div class="content">
+            <span class="text" id="player1">Bram Korsten</span>
+            <span class="versus">VS</span>
+            <span class="text" id="player2">Kaan Tuncer</span>
+          </div>
+        </div>
+        <div id="winScroll" class="messageScroll">
+          <span class="text">You <span class="color">Won</span></span>
+        </div>
+      </div>
+      <div class="menuIcons">
+        <div class="left flex">
+          <div class="buttonContainer">
+            <div id="arButton" class="toggleButton arButton">
+              <div class="buttonKnob"></div>
+            </div>
+            <span class="text">View in AR</span>
+          </div>
+        </div>
+        <div class="right flex">
+          <div class="icon information">
+            <div class="image"></div>
+            <!-- <div class="text Highlight">Naar de game</div> -->
+          </div>
+          <div
+            class="icon modeSelector viewer"
+            onClick="game.gameControls.switchMode(this)"
+            data-mode="viewer"
+          >
+            <div class="image"></div>
+            <!-- <div class="text Highlight">Naar de game</div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="signupWindow">
+      <input id="nameField" type="text" placeholder="Enter your name" />
+      <input id="setNameButton" type="button" value="Start game" />
+    </div>
+    <br />
+    <div class="gameWindow">
+      <input type="button" value="Rock" />
+      <input type="button" value="Paper" />
+      <input type="button" value="Scissors" />
+    </div> -->
+
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
+    <!-- <script src="assets/includes/three/three.min.js" charset="utf-8"></script> -->
+    <script src="assets/includes/three/three.js" charset="utf-8"></script>
+    <script
+      src="assets/includes/three/loaders/GLTFLoader.js"
+      charset="utf-8"
+    ></script>
+    <script
+      src="assets/includes/three/loaders/RGBELoader.js"
+      charset="utf-8"
+    ></script>
+    <script
+      src="assets/includes/three/loaders/EquirectangularToCubeGenerator.js"
+      charset="utf-8"
+    ></script>
+    <script
+      src="assets/includes/three/pmrem/PMREMCubeUVPacker.js"
+      charset="utf-8"
+    ></script>
+    <script
+      src="assets/includes/three/pmrem/PMREMGenerator.js"
+      charset="utf-8"
+    ></script>
+    <script
+      src="assets/includes/three/controls/OrbitControls.js"
+      charset="utf-8"
+    ></script>
+    <script src="assets/js/Connection.js" charset="utf-8"></script>
+    <script src="assets/js/GameControls.js" charset="utf-8"></script>
+    <script src="assets/js/GameModels.js" charset="utf-8"></script>
+    <script src="assets/js/HandController.js" charset="utf-8"></script>
+    <script src="assets/js/reticle.js" charset="utf-8"></script>
+    <script src="assets/js/VREngine.js" charset="utf-8"></script>
+    <script src="assets/js/XmasGame.js" charset="utf-8"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+
+    <script src="assets/js/Logic.js" charset="utf-8"></script>
+    <script src="assets/js/Client.js" charset="utf-8"></script>
+    <script src="assets/js/functions.js" charset="utf-8"></script>
+  </body>
+</html>

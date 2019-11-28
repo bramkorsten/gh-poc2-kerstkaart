@@ -1,0 +1,92 @@
+// main: styles.less
+
+.gameStartup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100vw;
+  height: 100%;
+  background-color: @white;
+
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &.visible {
+    display: flex;
+  }
+
+  .logo {
+    width: 300px;
+    height: 200px;
+    background: url("../img/logo_v1_full.png");
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  .loadingContainer {
+    max-width: 300px;
+    width: 90%;
+    display: none;
+
+    &.visible {
+      display: block;
+    }
+
+    .loadingBar {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background-color: @lightPurple;
+      position: relative;
+      overflow: hidden;
+
+      .loadingDone {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 0;
+        background-color: @mainRed;
+        .defaultTransition(300ms);
+      }
+    }
+    .loadingMessage {
+      width: 100%;
+      height: auto;
+      color: @black;
+      text-align: center;
+      margin: 15px 0;
+      .defaultBoldFont();
+    }
+  }
+
+  .gameInformation {
+    display: none;
+    max-width: 300px;
+    width: 90%;
+    height: auto;
+    .defaultLightFont();
+    text-align: center;
+
+    &.visible {
+      display: block;
+    }
+
+    p {
+      margin: 15px 0;
+    }
+  }
+
+  .button {
+    margin-top: 50px;
+    .defaultButton();
+    display: none;
+
+    &.visible {
+      display: flex;
+    }
+  }
+}
