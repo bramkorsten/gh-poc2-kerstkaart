@@ -195,12 +195,6 @@ class GameServer {
       .remove({ uToken: token })
       .write();
 
-    db.get("matches")
-      .find({ matchId: user.currentMatch })
-      .get("queue")
-      .remove({ uToken: token })
-      .write();
-
     return true;
   }
 }

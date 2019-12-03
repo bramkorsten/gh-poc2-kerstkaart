@@ -19,7 +19,7 @@ function isValidChoice(choice) {
 function sendInvalidUser(ws) {
   const response = {
     type: "error",
-    message: "uID is invalid"
+    data: "uID is invalid"
   };
   ws.send(JSON.stringify(response));
   return false;
@@ -28,7 +28,7 @@ function sendInvalidUser(ws) {
 function sendUserNotInMatch(ws) {
   const response = {
     type: "error",
-    message: "User is not in a match"
+    data: "User is not in a match"
   };
   ws.send(JSON.stringify(response));
   return false;
@@ -37,7 +37,7 @@ function sendUserNotInMatch(ws) {
 function sendInvalidChoice(ws) {
   const response = {
     type: "error",
-    message: "Invalid Choice"
+    data: "Invalid Choice"
   };
   ws.send(JSON.stringify(response));
   return false;
@@ -371,6 +371,39 @@ module.exports = {
     }
     gameServer.sendUpdateToMatch(match.matchId);
     return true;
+  },
+
+  forfeitMatch: function(message, ws) {
+    const token = message.userToken;
+    const user = isValidUser(token);
+    if (!user) {
+      return sendInvalidUser(ws);
+    }
+    if (!user.currentMatch) {
+      sendUserNotInMatch(ws);
+    }
+
+    const matchId = user.currentMatch;
+
+    const players = gameServer.getPlayersInMatch(matchId);
+    for (var i in players) {
+      if (user.uToken === players[i]) {
+        resetStreakForPlayer(isValidUser(players[i]));
+      } else {
+        increaseStreakForPlayer(isValidUser(players[i]));
+      }
+    }
+
+    const results = {
+      result: "forfeit",
+      data: "Player with uID " + user.uToken + " forfeited the match"
+    };
+    gameServer.sendMessageToMatch(matchId, "matchResults", results);
+    for (var i in players) {
+      gameServer.removePlayerFromActiveMatch(players[i]);
+      gameServer.removeCurrentMatchFromPlayer(players[i], false);
+    }
+    removeMatch(matchId);
   },
 
   setChoice: function(message, ws) {
