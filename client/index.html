@@ -84,6 +84,9 @@
         <div id="winScroll" class="messageScroll">
           <span class="text">You <span class="color">Won</span></span>
         </div>
+        <div class="largeMessage">
+          <span>Waiting for opponent!</span>
+        </div>
       </div>
       <div class="menuIcons">
         <div class="left flex">
@@ -95,17 +98,18 @@
           </div>
         </div>
         <div class="right flex">
-          <div class="icon information">
-            <div class="image"></div>
-            <!-- <div class="text Highlight">Naar de game</div> -->
-          </div>
-          <div
-            class="icon modeSelector viewer"
-            onClick="game.gameControls.switchMode(this)"
-            data-mode="viewer"
-          >
-            <div class="image"></div>
-            <!-- <div class="text Highlight">Naar de game</div> -->
+          <div class="buttonContainer">
+            <div class="icon info" data-info="How-to-Play">
+              <div class="image"></div>
+            </div>
+            <div
+              class="icon start"
+              data-info="Start the game"
+              data-mode="viewer"
+              onclick="game.gameControls.switchMode(this)"
+            >
+              <div class="image"></div>
+            </div>
           </div>
         </div>
       </div>

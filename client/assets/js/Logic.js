@@ -3,7 +3,7 @@
  * @Email:  code@bramkorsten.nl
  * @Project: Kerstkaart 2019
  * @Filename: gamelogic.js
- * @Last modified time: 2019-11-28T16:51:19+01:00
+ * @Last modified time: 2019-12-02T12:22:33+01:00
  * @Copyright: Copyright 2019 - Bram Korsten
  */
 
@@ -11,6 +11,7 @@ class GameLogic {
   constructor() {
     this.state = {
       isInitialized: false,
+      isInQueue: false,
       isInGame: false,
       isPlayer1: true
     };
@@ -32,11 +33,14 @@ class GameLogic {
 
   requestGame() {
     console.log("Requesting new game");
+    this.state.isInQueue = true;
     connection.sendMessage("requestMatch");
   }
 
-  forfeitGame() {
-    connection.sendMessage("forfeitGame");
+  forfeitMatch() {
+    connection.sendMessage("forfeitMatch");
+    this.state.isInGame = false;
+    this.state.isInQueue = false;
   }
 
   startGame(data) {
@@ -56,6 +60,7 @@ class GameLogic {
   updateMatch(data) {
     if (!this.state.isInGame && data.matchFull) {
       // New Match! Let's go
+      this.state.isInQueue = false;
       this.state.isInGame = true;
       this.startGame(data);
     } else if (!this.state.isInGame) {
@@ -92,6 +97,8 @@ class GameLogic {
         game.player1.hand.state.isWinning = false;
         game.player2.hand.state.isWinning = false;
         break;
+      case "forfeit":
+        break;
       default:
         console.log(results.result);
         console.log("Unexpected error in game ending");
@@ -102,6 +109,8 @@ class GameLogic {
 
     if (results.result == "tie") {
       game.gameControls.showWinnerScroll("It's a", "tie");
+    } else if (results.result == "forfeit") {
+      game.gameControls.showWinnerScroll("", "forfeited");
     } else if (this.state.isPlayer1 && results.result == 1) {
       game.gameControls.showWinnerScroll("You", "Won");
     } else if (!this.state.isPlayer1 && results.result == 2) {
@@ -109,6 +118,12 @@ class GameLogic {
     } else {
       game.gameControls.showWinnerScroll("You", "Lost");
     }
+    this.showEndgameControls();
+  }
+
+  showEndgameControls() {
+    this.state.isInGame = false;
+    game.gameControls.showHandControls(false);
     game.gameControls.showRestartButtons(true);
   }
 

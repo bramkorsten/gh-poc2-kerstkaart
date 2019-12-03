@@ -70,6 +70,24 @@ class GameControls {
       }
     });
 
+    $(window).on("beforeunload", function(e) {
+      // Cancel the event (if necessary)
+      e.preventDefault();
+      // Google Chrome requires returnValue to be set
+      e.returnValue = "";
+      if (game.logic.state.isInGame || game.logic.state.isInQueue) {
+        console.log("forfeiting match");
+        game.logic.forfeitMatch();
+      }
+
+      return null;
+    });
+
+    // window.onbeforeunload = function() {
+    //
+    //   return "Forfeiting Match";
+    // };
+
     function isValidInput(input) {
       if (input && input.length > 3) {
         return true;

@@ -28,6 +28,10 @@ function getFunctions() {
     },
     matchResults: function(data) {
       game.logic.finishGame(data);
+    },
+    error: function(data) {
+      console.log("The server returned an error:");
+      console.error(data);
     }
   });
 }

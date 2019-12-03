@@ -2,7 +2,7 @@ class Connection {
   constructor(address = false) {
     this.isConnected = false;
     this.connectionAttempts = 0;
-    this.address = "ws://7995ea7c.ngrok.io";
+    this.address = "ws://gh-kerstkaart-2019.herokuapp.com/";
     if (address) {
       this.address = address;
     }
@@ -82,5 +82,11 @@ class Connection {
       message: msg || false
     };
     this.server.send(JSON.stringify(message));
+  }
+
+  _useDevelopmentAdress() {
+    this.address = "ws://da9d6dcf.ngrok.io";
+    this.server.close();
+    this.reconnect();
   }
 }

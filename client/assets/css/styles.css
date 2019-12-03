@@ -265,10 +265,10 @@
   color: #fff;
   border-radius: 9px;
   font-style: normal;
-  font-size: 14px;
+  font-size: 13px;
   font-family: "Qanelas";
   font-weight: 900;
-  line-height: 20px;
+  line-height: 17px;
   text-align: center;
   text-transform: uppercase;
   padding: 0 15px;
@@ -669,9 +669,9 @@
 }
 .gameOverlay .menuIcons {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
-  padding-bottom: 50px;
+  padding-top: 50px;
   width: 100%;
   height: auto;
   pointer-events: none;
@@ -685,187 +685,45 @@
   display: flex;
   margin: 0 50px;
 }
-.gameOverlay .menuIcons .icon {
-  width: 60px;
-  height: auto;
-  display: block;
-  position: relative;
-  z-index: 1;
-  margin: 0 25px 0 0;
-  pointer-events: painted;
+.gameOverlay .menuIcons .buttonContainer {
+  background-color: #f8cc8c;
+  border-radius: 10px;
+  border: 3px solid #000;
+  display: flex;
+  pointer-events: auto;
+}
+.gameOverlay .menuIcons .buttonContainer .icon {
+  width: 40px;
+  height: 40px;
+  background-color: #ba9969;
+  border-radius: 6px;
+  margin: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
 }
-.gameOverlay .menuIcons .icon:last-child {
-  margin: 0;
+.gameOverlay .menuIcons .buttonContainer .icon .image {
+  width: 35px;
+  height: 35px;
 }
-.gameOverlay .menuIcons .icon::after {
-  content: "";
-  display: block;
-  background-color: #ebe0fc;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  -webkit-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
-  -moz-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
-  -o-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
-  transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
-}
-.gameOverlay .menuIcons .icon .image {
-  width: 50px;
-  height: 80px;
-  margin: -10px 5px 0 5px;
-  -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  -moz-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  -o-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-}
-.gameOverlay .menuIcons .icon .text {
-  margin-top: 15px;
-  display: inline-block;
-  background-color: #471c72;
-  color: #fff;
-  border-radius: 9px;
-  font-style: normal;
-  font-size: 14px;
-  font-family: "Qanelas";
-  font-weight: 900;
-  line-height: 20px;
-  text-align: center;
-  text-transform: uppercase;
-  padding: 0 15px;
-  position: relative;
-  transform: 0;
-  -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  -moz-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  -o-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-}
-.gameOverlay .menuIcons .icon .text::after {
-  content: "";
-  background-color: #c6a4e9;
-  width: 100%;
-  height: 100%;
-  border-radius: 9px;
-  display: block;
-  position: absolute;
-  top: 3px;
-  left: 0;
-  z-index: -1;
-}
-.gameOverlay .menuIcons .icon:hover::after {
-  transform: scale(1.3);
-}
-.gameOverlay .menuIcons .icon:hover .image {
-  transform: scale(1.2);
-}
-.gameOverlay .menuIcons .icon.modeSelector.viewer .image {
+.gameOverlay .menuIcons .buttonContainer .icon.start .image {
   background: url("../img/icon_door.png");
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
 }
-.gameOverlay .menuIcons .icon.modeSelector.game .image {
+.gameOverlay .menuIcons .buttonContainer .icon.start.game .image {
   background: url("../img/icon_world.png");
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
 }
-.gameOverlay .menuIcons .icon.information .image {
+.gameOverlay .menuIcons .buttonContainer .icon.info .image {
   background: url("../img/icon_info.svg");
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
-}
-.gameOverlay .menuIcons .buttonContainer {
-  pointer-events: painted;
-  width: 90px;
-  height: 90px;
-  background-color: #ebe0fc;
-  border-radius: 50%;
-}
-.gameOverlay .menuIcons .buttonContainer .toggleButton {
-  margin: 10px 0;
-  width: 50px;
-  height: 12px;
-  border-radius: 10px;
-  background-color: #959595;
-  position: relative;
-  display: block;
-  -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  -moz-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  -o-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  margin: 28px 20px 15px;
-}
-.gameOverlay .menuIcons .buttonContainer .toggleButton.checked {
-  background-color: #471c72;
-}
-.gameOverlay .menuIcons .buttonContainer .toggleButton.checked div {
-  transform: translateX(100%);
-  background-color: #471c72;
-}
-.gameOverlay .menuIcons .buttonContainer .toggleButton.checked div::before {
-  background-color: #7a30c4;
-}
-.gameOverlay .menuIcons .buttonContainer .toggleButton div {
-  width: 25px;
-  height: 25px;
-  border: 3px solid #000;
-  border-radius: 50%;
-  background-color: #959595;
-  display: block;
-  position: absolute;
-  overflow: hidden;
-  top: -9.5px;
-  left: -6.5px;
-  transform: 0;
-  -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  -moz-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  -o-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-}
-.gameOverlay .menuIcons .buttonContainer .toggleButton div::before {
-  content: "";
-  display: block;
-  background-color: #c8c8c8;
-  border-radius: 50%;
-  width: 110%;
-  height: 100%;
-  position: absolute;
-  top: -3px;
-  left: -2px;
-  z-index: 1;
-  -webkit-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  -moz-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  -o-transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-  transition: all 500ms cubic-bezier(0.77, 0, 0.175, 1);
-}
-.gameOverlay .menuIcons .buttonContainer .toggleButton div::after {
-  content: "";
-  display: block;
-  position: absolute;
-  background-color: #fff;
-  width: 16px;
-  height: 8px;
-  z-index: -1;
-  top: 4px;
-  left: 2px;
-  border-radius: 50%;
-  transform: rotate(-30deg);
-  z-index: 2;
-}
-.gameOverlay .menuIcons .buttonContainer .text {
-  text-transform: uppercase;
-  text-align: center;
-  font-style: normal;
-  font-size: 12px;
-  font-family: "Qanelas";
-  font-weight: 900;
-  display: block;
 }
 @media only screen and (max-width: 1000px) {
   .gameOverlay .menuIcons {
