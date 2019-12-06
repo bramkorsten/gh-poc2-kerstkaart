@@ -16,7 +16,7 @@
     .informationOverlay {
       .versusBar {
         top: 150px;
-        transform: translate(-50%, -220px) rotate(0);
+        transform: translate(-50%, -220px) rotate(0) scale(0.7);
       }
     }
   }
@@ -34,9 +34,18 @@
   }
   .gameOverlay {
     .informationOverlay {
+      .loadingText {
+        left: 5%;
+        top: 45px;
+      }
       .versusBar {
-        top: 85px;
-        transform: translate(-50%, -140px) rotate(0);
+        top: 95px;
+        transform: translate(-50%, -160px) rotate(0) scale(0.7);
+      }
+      .lageMessage {
+        span {
+          font-size: 50px;
+        }
       }
     }
 
@@ -58,12 +67,8 @@
         }
       }
 
-      .buttonContainer {
-        display: none;
-      }
-
       .flex {
-        margin: 0 25px;
+        margin: 0 5%;
       }
     }
 
@@ -78,6 +83,69 @@
           .image {
             width: 75px;
             height: 100px;
+          }
+        }
+      }
+    }
+  }
+  .window {
+    top: 105px;
+    height: calc(~"100% - 130px");
+    right: 5%;
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .gameOverlay {
+    .informationOverlay {
+      .loadingText {
+        top: auto;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+
+    .window {
+      .title {
+        font-size: 30px;
+      }
+      &.highscores {
+        .container {
+          .highscoresLegend {
+            span {
+              font-size: 13px;
+            }
+          }
+          .highscoresContainer {
+            .highscore {
+              span {
+                font-size: 13px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  .gameOverlay {
+    .window {
+      &.highscores {
+        .container {
+          .highscoresLegend {
+            span {
+              font-size: 12px;
+            }
+          }
+          .highscoresContainer {
+            .highscore {
+              span {
+                font-size: 12px;
+              }
+            }
           }
         }
       }

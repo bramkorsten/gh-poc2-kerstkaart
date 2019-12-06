@@ -3,6 +3,8 @@ class Connection {
     this.isConnected = false;
     this.connectionAttempts = 0;
     this.address = "ws://gh-kerstkaart-2019.herokuapp.com/";
+    this.address = "ws://kerstkaart-server-test.meh.greenhousegroup.com/";
+    this.address = "ws://28beacd8.ngrok.io";
     if (address) {
       this.address = address;
     }
@@ -16,7 +18,7 @@ class Connection {
       connection.isConnected = true;
       connection.connectionAttempts = 0;
       console.log("Connected to server");
-      game.gameControls.loadingText
+      game.gameControls.statusText
         .changeColor("green")
         .changeTextAndToggle("Connected!")
         .removeInMillis(2000);
@@ -30,7 +32,7 @@ class Connection {
     this.server.onclose = function(event) {
       connection.isConnected = false;
       console.log("Server connection lost...");
-      game.gameControls.loadingText
+      game.gameControls.statusText
         .changeColor("red")
         .changeTextAndToggle("Connection lost...");
       setTimeout(function() {
@@ -58,7 +60,7 @@ class Connection {
 
   reconnect() {
     console.log("trying to reconnect...");
-    game.gameControls.loadingText
+    game.gameControls.statusText
       .changeColor("purple")
       .changeTextAndToggle("Reconnecting");
     this.connectionAttempts++;
@@ -85,7 +87,7 @@ class Connection {
   }
 
   _useDevelopmentAdress() {
-    this.address = "ws://da9d6dcf.ngrok.io";
+    this.address = "ws://localhost:5000";
     this.server.close();
     this.reconnect();
   }

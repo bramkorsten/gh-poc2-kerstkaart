@@ -64,7 +64,7 @@
           </div>
         </div>
       </div>
-      <div class="informationOverlay">
+      <div id="informationOverlay" class="informationOverlay">
         <div id="loadingText" class="loadingText visible">
           <div class="left">
             <div class="loadingAnimation grey"></div>
@@ -85,21 +85,30 @@
           <span class="text">You <span class="color">Won</span></span>
         </div>
         <div class="largeMessage">
-          <span>Waiting for opponent!</span>
+          <div class="zoombox">
+            <span class="normal">Waiting for opponent!</span>
+            <span class="outline">Waiting for opponent!</span>
+          </div>
         </div>
       </div>
       <div class="menuIcons">
-        <div class="left flex">
-          <div class="buttonContainer">
-            <div id="arButton" class="toggleButton arButton">
-              <div class="buttonKnob"></div>
-            </div>
-            <span class="text">View in AR</span>
-          </div>
-        </div>
         <div class="right flex">
-          <div class="buttonContainer">
-            <div class="icon info" data-info="How-to-Play">
+          <div id="menuButtons" class="buttonContainer">
+            <div class="icon arMode" data-info="View in AR">
+              <div class="image"></div>
+            </div>
+            <div
+              class="icon highscores"
+              data-info="View highscores"
+              onclick="game.gameControls.highscores.toggle()"
+            >
+              <div class="image"></div>
+            </div>
+            <div
+              class="icon info"
+              data-info="How-to-Play"
+              onclick="game.gameControls.about.toggle()"
+            >
               <div class="image"></div>
             </div>
             <div
@@ -110,7 +119,118 @@
             >
               <div class="image"></div>
             </div>
+            <span class="infoText">Enne Menke</span>
           </div>
+        </div>
+      </div>
+      <div id="highscoreWindow" class="window highscores">
+        <h2 class="title">Highscores</h2>
+        <div class="container">
+          <div class="highscoresLegend">
+            <span
+              class="name"
+              onclick="game.gameControls.highscores.sortByName()"
+              >Name</span
+            >
+            <span
+              class="matchesPlayed"
+              onclick="game.gameControls.highscores.sortByGamesPlayed()"
+              ># Played</span
+            >
+            <span
+              class="highscore active"
+              onclick="game.gameControls.highscores.sortByHighscore()"
+              >Highscore</span
+            >
+          </div>
+          <div class="highscoresContainer">
+            <div class="highscore">
+              <span class="userName">Bram Korsten</span>
+              <span class="userMatchesPlayed">69</span>
+              <span class="userHighscore">16</span>
+            </div>
+          </div>
+        </div>
+        <div class="buttons">
+          <div class="button you" onclick=""><div class="image"></div></div>
+          <div
+            class="button refresh"
+            onclick="game.gameControls.highscores.refresh()"
+          >
+            <div class="image"></div>
+          </div>
+        </div>
+      </div>
+      <div id="aboutWindow" class="window about">
+        <h2 class="title">About</h2>
+        <div class="container scrolling light">
+          <h3>Merry Christmas!</h3>
+          <p>
+            Welcome to the Greenhouse 2019 Christmas game! This game is a way
+            for us to show you everything that's possible using modern
+            technologies. To do this, we made you a game of Rock, Paper,
+            Scissors, using only the web! There is even a hidden feature for
+            some users, to experience WebAR, the future of AR applications.
+          </p>
+          <h3>How to play?</h3>
+          <p>
+            To start playing the game, click the door
+            <span class="icon door"></span> icon in the top right! Go find an
+            opponent to play against and try to set the best highscore!
+            <span class="icon star"></span>
+          </p>
+          <p>
+            There are three options in Rock, Paper, Scissors. You can probably
+            guess what the options are...
+          </p>
+          <p>
+            <span class="icon wide rock"></span><b>Rock</b> beats
+            <b>Scissors</b>
+          </p>
+          <p>
+            <span class="icon wide paper"></span><b>Paper</b> beats <b>Rock</b>
+          </p>
+          <p>
+            <span class="icon wide scissors"></span><b>Scissors</b> beats
+            <b>Paper</b>
+          </p>
+          <h3>About AR Mode</h3>
+          <p>
+            The AR team within Greenhouse is working very hard to create the
+            most elaborated AR experiences. New technologies play a huge part in
+            this! That is why we are looking into the new area of AR called
+            WebAR. This technology enables the use of AR without any apps, just
+            by using your browser! This means you don't have to download a new
+            app to experience this AR app.
+          </p>
+          <p>
+            Unfortunately, since this technology is quite new, right now, it
+            only works on relatively new Android phones. To try this out, please
+            download
+            <a
+              href="https://play.google.com/store/apps/details?id=com.chrome.beta"
+              >Google Chrome Beta</a
+            >
+            on your Android device. Then, open this website again and look for
+            the <span class="icon ar"></span> icon in the top bar!
+          </p>
+          <h3>Freeroam</h3>
+          <p>
+            Don't want to play the game? That's fine. You can still just look
+            around the room, see what we've made and just have fun!
+          </p>
+          <h3>In case of emergency</h3>
+          <p>
+            This game is a tech demo. In other words, there will be bugs! But
+            that's okay. If you encounter anything that shouldn't happen, feel
+            free to ask <b>Bram Korsten</b> more about it via Slack or
+            <a href="mailto:bram.korsten@greenhousegroup.com">E-mail</a>. Please
+            provide the following information:
+          </p>
+          <p>
+            <b>Version:</b> v1.0.0<br />
+            <b>GameID:</b> <span id="userGameToken">No Game ID</span><br />
+          </p>
         </div>
       </div>
     </div>
@@ -129,6 +249,10 @@
       src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
       crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.1.0/mustache.min.js"
+      charset="utf-8"
     ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
     <!-- <script src="assets/includes/three/three.min.js" charset="utf-8"></script> -->

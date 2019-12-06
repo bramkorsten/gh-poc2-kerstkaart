@@ -1,0 +1,250 @@
+// main: styles.less
+
+.window {
+  max-width: 450px;
+  width: 90%;
+  height: calc(~"100% - 200px");
+  max-height: 600px;
+  background-color: @darkYellow;
+  border-radius: 11px;
+  border: 3px solid @black;
+  position: absolute;
+  overflow: hidden;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  box-shadow: 0 1px 15px 0px #0009;
+  box-sizing: border-box;
+  top: 150px;
+  right: 50px;
+  .defaultTransition(0.6s);
+  transform: translateX(calc(~"100% + 30px + 5vw"));
+  // display: none;
+
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: calc(~"100% + 5px");
+    height: 100%;
+    background-color: @mainYellow;
+    border-radius: 22px;
+    top: -5px;
+    left: -8px;
+    z-index: -1;
+  }
+
+  &.visible {
+    transform: translateX(0);
+  }
+
+  .title {
+    .defaultBoldFont(34px);
+    color: @darkPurple;
+    text-transform: uppercase;
+    text-align: center;
+    text-shadow: 2px 2px @darkYellow;
+  }
+
+  .container {
+    overflow: hidden;
+    border-radius: 11px;
+    border: 1px dashed @darkYellow;
+    background-color: @mainYellow;
+    width: calc(~"100% - 20px");
+    height: auto;
+    margin: 0 10px 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+
+    &.scrolling {
+      overflow-y: scroll;
+    }
+
+    &.light {
+      background-color: @lightyellow;
+    }
+
+    h3 {
+      .defaultBoldFont(18px);
+      padding: 0 10px;
+      margin: 0 0 20px;
+
+      &:first-child {
+        margin-top: 20px;
+      }
+    }
+
+    p {
+      .defaultLightFont(14px);
+      padding: 0 10px;
+      margin: 0 0 20px;
+      line-height: 20px;
+
+      b {
+        .defaultBoldFont(14px);
+      }
+
+      .icon {
+        display: inline-block;
+        width: 25px;
+        height: 10px;
+        transform: scale(2.4);
+        &.wide {
+          margin: 0 10px;
+        }
+        &.door {
+          background: url("../img/icon_door.png");
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
+        &.star {
+          background: url("../img/icon_star.svg");
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
+        &.rock {
+          background: url("../img/Rock.png");
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
+        &.paper {
+          background: url("../img/Paper.png");
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
+        &.scissors {
+          background: url("../img/Scissor.png");
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
+        &.ar {
+          background: url("../img/icon_ar.svg");
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
+      }
+    }
+
+    a {
+      color: @mainPurple;
+
+      &:hover {
+        color: @darkPurple;
+      }
+    }
+  }
+
+  .buttons {
+    height: 50px;
+    width: auto;
+    display: flex;
+    margin: 5px 10px 10px;
+
+    .button {
+      background-color: @darkYellow;
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      margin: 5px 10px 5px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+
+      .image {
+        width: 35px;
+        height: 35px;
+      }
+
+      &.you {
+        .image {
+          background: url("../img/icon_star.svg");
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
+      }
+      &.refresh {
+        .image {
+          background: url("../img/icon_refresh.svg");
+          background-position: center;
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
+      }
+    }
+  }
+
+  &.highscores {
+    .container {
+      margin-bottom: 0;
+    }
+    .highscoresLegend {
+      display: flex;
+      align-items: center;
+      background-color: @lightyellow;
+      box-shadow: 5px 5px 5px #00000017;
+      position: relative;
+
+      span {
+        .defaultBoldFont(15px);
+        text-transform: uppercase;
+        padding: 10px;
+        cursor: pointer;
+
+        &.active {
+          color: @darkPurple;
+        }
+
+        &:hover {
+          color: @mainPurple;
+        }
+
+        &.name {
+          width: 40%;
+        }
+        &.matchesPlayed {
+          width: 30%;
+        }
+        &.highscore {
+          width: 30%;
+        }
+      }
+    }
+    .highscoresContainer {
+      overflow-y: scroll;
+
+      .highscore {
+        display: flex;
+        align-items: center;
+        background-color: @offsetYellow;
+        border-bottom: 1px dashed @darkYellow;
+
+        span {
+          .defaultBoldFont(15px);
+          padding: 10px;
+          display: block;
+
+          &.userName {
+            width: 40%;
+          }
+          &.userMatchesPlayed {
+            width: 30%;
+          }
+          &.userHighscore {
+            width: 30%;
+          }
+        }
+      }
+    }
+  }
+}

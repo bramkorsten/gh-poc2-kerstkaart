@@ -1,10 +1,11 @@
-var connection = new Connection();
+var connection;
 
 class XmasGame {
   constructor() {
     this.logic = new GameLogic();
     this.client = new Client();
     this.client.init();
+    connection = new Connection();
     this.server = connection.server;
     this.gameControls = new GameControls();
     this.models = new GameModels(false);

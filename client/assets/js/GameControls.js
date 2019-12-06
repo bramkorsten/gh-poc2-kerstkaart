@@ -59,6 +59,20 @@ class GameControls {
       });
     }
 
+    $("#menuButtons .icon").each(function(i, e) {
+      $(e).hover(
+        function() {
+          if ($(e).data("info")) {
+            $("#menuButtons .infoText").text($(e).data("info"));
+            $("#menuButtons .infoText").addClass("visible");
+          }
+        },
+        function() {
+          $("#menuButtons .infoText").removeClass("visible");
+        }
+      );
+    });
+
     $(".startGameButton").click(function() {
       if (isValidInput($("#nameInput").val()) || client.isExistingUser) {
         if (!client.isExistingUser) {
@@ -112,13 +126,28 @@ class GameControls {
       this.goToGameCamera();
       game.logic.requestGame();
     } else {
-      $(e)
-        .removeClass("game")
-        .addClass("viewer");
-      $(e).data("mode", "viewer");
-      this.goToQueueCamera();
-      game.logic.state.isInGame = false;
-      // TODO: Ask for leave
+      if (game.logic.state.isInQueue || game.logic.state.isInGame) {
+        if (
+          confirm(
+            "Are you sure you want to leave the match? " +
+              "You will lose your streak"
+          )
+        ) {
+          $(e)
+            .removeClass("game")
+            .addClass("viewer");
+          $(e).data("mode", "viewer");
+          this.goToQueueCamera();
+          game.logic.quitGame();
+        }
+      } else {
+        $(e)
+          .removeClass("game")
+          .addClass("viewer");
+        $(e).data("mode", "viewer");
+        this.goToQueueCamera();
+        game.logic.quitGame();
+      }
     }
   }
 
@@ -234,7 +263,51 @@ class GameControls {
     }
   }
 
-  loadingText = {
+  vibrate(time = 400) {
+    if (typeof navigator.vibrate === "function") {
+      navigator.vibrate(time);
+    }
+  }
+
+  overlayText = {
+    element: $(".largeMessage").first(),
+    timeout: false,
+    destroyTimeout: false,
+    createNew: function(text, timeout = false) {
+      var element = this.element.clone(false);
+      // this.element = $(".largeMessage")
+      //   .clone(false)
+      //   .first();
+      element.removeClass("hidden visible");
+      element.find(".normal").text(text);
+      element.find(".outline").text(text);
+      var context = this;
+      if (timeout) {
+        this.timeout = setTimeout(function() {
+          context.destroy(element);
+        }, timeout);
+      }
+      this.destroy($(".largeMessage"));
+      $("#informationOverlay").append(element);
+      setTimeout(function() {
+        element.addClass("visible");
+      }, 30);
+    },
+    destroy: function(element, time = 1000) {
+      element.addClass("hidden").removeClass("visible");
+      this.destroyTimeout = setTimeout(function() {
+        element.remove();
+      }, time);
+    },
+    destroyAllActiveOverlays: function() {
+      var context = this;
+      $(".largeMessage").each(function(i, e) {
+        context.destroy($(e));
+      });
+    }
+  };
+
+  statusText = {
     timeout: false,
     show: function(visible = true) {
       clearTimeout(this.timeout);
@@ -312,6 +385,178 @@ class GameControls {
         handle.show(false);
       }, milliseconds);
       return this;
+    }
+  };
+
+  windows = {
+    hideAllWindows: function(exceptions = false) {
+      if (exceptions) {
+        $(".window:not(" + exceptions + ")").removeClass("visible");
+      } else {
+        $(".window").removeClass("visible");
+      }
+      game.gameControls.about.updateIcon();
+      game.gameControls.highscores.updateIcon();
+      return this;
+    }
+  };
+
+  about = {
+    show: function(visible = true) {
+      if (visible) {
+        game.gameControls.windows.hideAllWindows();
+        $("#aboutWindow").addClass("visible");
+      } else {
+        $("#aboutWindow").removeClass("visible");
+      }
+      this.updateIcon();
+      return this;
+    },
+    toggle: function() {
+      game.gameControls.windows.hideAllWindows(".about");
+      $("#aboutWindow").toggleClass("visible");
+      this.updateIcon();
+      return this;
+    },
+    updateIcon: function() {
+      if ($("#aboutWindow").hasClass("visible")) {
+        $("#menuButtons .icon.info")
+          .addClass("close")
+          .data("info", "Close about");
+      } else {
+        $("#menuButtons .icon.info")
+          .removeClass("close")
+          .data("info", "How-to-Play");
+      }
+      return this;
+    }
+  };
+
+  highscores = {
+    highscoreList: {},
+    currentSortingMethod: 0, //0=highscore, 1=name, 2=gamesplayed
+    lastRefresh: false,
+    show: function(visible = true) {
+      if (visible) {
+        this.refresh(true);
+        game.gameControls.windows.hideAllWindows();
+        $("#highscoreWindow").addClass("visible");
+      } else {
+        $("#highscoreWindow").removeClass("visible");
+      }
+      this.updateIcon();
+      return this;
+    },
+    toggle: function() {
+      game.gameControls.windows.hideAllWindows(".highscores");
+      $("#highscoreWindow").toggleClass("visible");
+      this.updateIcon();
+      this.refresh(true);
+      return this;
+    },
+    updateIcon: function() {
+      if ($("#highscoreWindow").hasClass("visible")) {
+        $("#menuButtons .icon.highscores")
+          .addClass("close")
+          .data("info", "Close highscores");
+      } else {
+        $("#menuButtons .icon.highscores")
+          .removeClass("close")
+          .data("info", "View highscores");
+      }
+      return this;
+    },
+    refresh: function(suppressWarning = false) {
+      if (!this.lastRefresh) {
+        this.lastRefresh = Date.now();
+        connection.sendMessage("getHighscores");
+      } else if (this.lastRefresh && this.lastRefresh < new Date() - 10000) {
+        this.lastRefresh = Date.now();
+        connection.sendMessage("getHighscores");
+      } else {
+        const lastRefresh = (Date.now() - this.lastRefresh) / 1000;
+        if (!suppressWarning) {
+          console.warn(
+            "TOO MANY REQUESTS: Last refresh was " +
+              lastRefresh +
+              " seconds ago"
+          );
+        }
+      }
+    },
+    sortByName: function() {
+      this.currentSortingMethod = 1;
+      var list = $("#highscoreWindow .highscoresContainer .highscore").get();
+      list.sort(_sort);
+      $("#highscoreWindow .highscoresContainer").append(list);
+
+      $("#highscoreWindow .highscoresLegend span").removeClass("active");
+      $("#highscoreWindow .highscoresLegend .name").addClass("active");
+
+      function _sort(a, b) {
+        return a.dataset.name.localeCompare(b.dataset.name);
+      }
+    },
+    sortByHighscore: function() {
+      this.currentSortingMethod = 0;
+      var list = $("#highscoreWindow .highscoresContainer .highscore").get();
+      list.sort(_sort);
+      $("#highscoreWindow .highscoresContainer").append(list);
+
+      $("#highscoreWindow .highscoresLegend span").removeClass("active");
+      $("#highscoreWindow .highscoresLegend .highscore").addClass("active");
+
+      function _sort(a, b) {
+        return b.dataset.highscore - a.dataset.highscore;
+      }
+    },
+    sortByGamesPlayed: function() {
+      this.currentSortingMethod = 2;
+      var list = $("#highscoreWindow .highscoresContainer .highscore").get();
+      list.sort(_sort);
+      $("#highscoreWindow .highscoresContainer").append(list);
+
+      $("#highscoreWindow .highscoresLegend span").removeClass("active");
+      $("#highscoreWindow .highscoresLegend .matchesPlayed").addClass("active");
+
+      function _sort(a, b) {
+        return b.dataset.matchesPlayed - a.dataset.matchesPlayed;
+      }
+    },
+    _onRefresh: function(data) {
+      const context = this;
+      $("#highscoreWindow .highscoresContainer .highscore").remove();
+      // TODO: Make this call on startup?
+      $.get("/templates/highscore.mustache", function(template) {
+        $.each(data.highscores, function(i, e) {
+          if (e.highscore) {
+            const userInfo = {
+              name: e.name,
+              matchesPlayed: e.gamesPlayed,
+              highscore: e.highscore.bestStreak,
+              token: e.uToken
+            };
+            // context.highscoreList.push(userInfo);
+            var renderedHighscore = Mustache.render(template, userInfo);
+            $("#highscoreWindow .highscoresContainer").append(
+              renderedHighscore
+            );
+          }
+        });
+        switch (this.currentSortingMethod) {
+          case 0:
+            context.sortByHighscore();
+            break;
+          case 1:
+            context.sortByName();
+            break;
+          case 2:
+            context.sortByGamesPlayed();
+            break;
+          default:
+            context.sortByHighscore();
+        }
+      });
     }
   };
 }

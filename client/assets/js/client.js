@@ -3,7 +3,7 @@
  * @Email:  code@bramkorsten.nl
  * @Project: Kerstkaart 2019
  * @Filename: client.js
- * @Last modified time: 2019-11-28T16:40:04+01:00
+ * @Last modified time: 2019-12-06T12:35:42+01:00
  * @Copyright: Copyright 2019 - Bram Korsten
  */
 
@@ -47,6 +47,7 @@ class Client {
 
   setToken(token) {
     this.token = token;
+    $("#userGameToken").text(token);
   }
 
   setName(name) {

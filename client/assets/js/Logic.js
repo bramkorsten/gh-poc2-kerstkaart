@@ -3,7 +3,7 @@
  * @Email:  code@bramkorsten.nl
  * @Project: Kerstkaart 2019
  * @Filename: gamelogic.js
- * @Last modified time: 2019-12-02T12:22:33+01:00
+ * @Last modified time: 2019-12-06T12:53:04+01:00
  * @Copyright: Copyright 2019 - Bram Korsten
  */
 
@@ -13,7 +13,8 @@ class GameLogic {
       isInitialized: false,
       isInQueue: false,
       isInGame: false,
-      isPlayer1: true
+      isPlayer1: true,
+      madeChoice: false
     };
     // this.server = connection.server;
     this.sandbox = getFunctions();
@@ -39,21 +40,29 @@ class GameLogic {
 
   forfeitMatch() {
     connection.sendMessage("forfeitMatch");
-    this.state.isInGame = false;
-    this.state.isInQueue = false;
+    game.gameControls.overlayText.createNew("You forfeited :(", 2000);
   }
 
   startGame(data) {
-    game.gameControls.loadingText
+    game.gameControls.statusText
       .changeColor("green")
       .changeTextAndToggle("Opponent found!")
       .removeInMillis(2000);
     game.gameControls.showVersusBar(data);
     game.gameControls.showHandControls(true);
+    game.gameControls.overlayText.createNew("Opponent found!", 2000);
+    game.gameControls.windows.hideAllWindows();
+    game.gameControls.vibrate();
     this.setPlayerNumber(data);
   }
 
   updateGame(data) {
+    if (!this.state.madeChoice) {
+      game.gameControls.overlayText.createNew(
+        "Your opponent made his choice!",
+        1000
+      );
+    }
     console.log("Update Game");
   }
 
@@ -62,17 +71,22 @@ class GameLogic {
       // New Match! Let's go
       this.state.isInQueue = false;
       this.state.isInGame = true;
+      this.state.madeChoice = false;
       this.startGame(data);
     } else if (!this.state.isInGame) {
-      game.gameControls.loadingText
+      game.gameControls.statusText
         .changeColor("purple")
         .changeTextAndToggle("Waiting for opponent");
+      game.gameControls.overlayText.createNew("Waiting for opponent!");
     } else {
       this.updateGame(data);
     }
   }
 
   finishGame(results) {
+    this.state.madeChoice = false;
+    game.gameControls.vibrate();
+    game.gameControls.windows.hideAllWindows();
     switch (results.result) {
       case "1":
         if (this.state.isPlayer1) {
@@ -127,15 +141,30 @@ class GameLogic {
     game.gameControls.showRestartButtons(true);
   }
 
+  quitGame() {
+    if (this.state.isInQueue || this.state.isInGame) {
+      this.forfeitMatch();
+    }
+    this.state.isInGame = false;
+    this.state.isInQueue = false;
+    game.gameControls.showHandControls(false);
+    game.gameControls.showRestartButtons(false);
+    game.gameControls.hideWinnerScroll();
+    game.gameControls.statusText.show(false);
+    // TODO: change the icon and camera
+  }
+
   resetGame() {
     this.state.isInGame = false;
     game.gameControls.hideWinnerScroll();
     game.gameControls.showRestartButtons(false);
+    game.gameControls.windows.hideAllWindows();
     this.requestGame();
   }
 
   sendChoice(choice) {
     game.gameControls.showHandControls(false);
+    this.state.madeChoice = true;
     connection.sendMessage("setChoice", { choice: choice });
   }
 

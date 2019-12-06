@@ -3,7 +3,7 @@
  * @Email:  code@bramkorsten.nl
  * @Project: Kerstkaart 2019
  * @Filename: styles.less
- * @Last modified time: 2019-11-21T13:14:32+01:00
+ * @Last modified time: 2019-12-03T13:50:17+01:00
  * @Copyright: Copyright 2019 - Bram Korsten
  */
 @font-face {
@@ -198,6 +198,17 @@
   }
   100% {
     transform: translateX(-10px);
+  }
+}
+@keyframes zoom {
+  0% {
+    transform: scale(1.05);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1.05);
   }
 }
 .gameOverlay {
@@ -472,8 +483,8 @@
   justify-content: flex-start;
   align-items: center;
   position: absolute;
-  top: 36px;
-  left: 20px;
+  top: 70px;
+  left: 50px;
   -webkit-transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
   -moz-transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
   -o-transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
@@ -556,9 +567,9 @@
   z-index: 5;
   overflow: hidden;
   box-shadow: 0 1px 15px 0px #0009;
-  top: 70px;
+  top: 56px;
   left: 50%;
-  transform: translate(-50%, -140px) rotate(0);
+  transform: translate(-50%, -140px) rotate(0) scale(0.7);
   -webkit-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
   -moz-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
   -o-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
@@ -646,6 +657,7 @@
   -moz-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
   -o-transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
   transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  z-index: 5;
 }
 .gameOverlay .informationOverlay .messageScroll.visible {
   transform: translate(-50%, -50%) scale(1);
@@ -667,6 +679,54 @@
 .gameOverlay .informationOverlay .messageScroll .text .color {
   color: #471c72;
 }
+.gameOverlay .informationOverlay .largeMessage {
+  position: absolute;
+  width: 500px;
+  height: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(10);
+  opacity: 0;
+  -webkit-transition: all 0.7s cubic-bezier(0.18, 0.65, 0.18, 1);
+  -moz-transition: all 0.7s cubic-bezier(0.18, 0.65, 0.18, 1);
+  -o-transition: all 0.7s cubic-bezier(0.18, 0.65, 0.18, 1);
+  transition: all 0.7s cubic-bezier(0.18, 0.65, 0.18, 1);
+  z-index: 7;
+}
+.gameOverlay .informationOverlay .largeMessage.visible {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+.gameOverlay .informationOverlay .largeMessage.hidden {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(1);
+}
+.gameOverlay .informationOverlay .largeMessage .zoombox {
+  animation: 1.4s zoom infinite;
+}
+.gameOverlay .informationOverlay .largeMessage span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(5deg);
+  text-align: center;
+  font-style: normal;
+  font-size: 70px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  width: 100%;
+  height: auto;
+  line-height: 0.9;
+}
+.gameOverlay .informationOverlay .largeMessage .normal {
+  z-index: 2;
+  color: #471c72;
+}
+.gameOverlay .informationOverlay .largeMessage .outline {
+  z-index: 1;
+  color: #f8cc8c;
+  -webkit-text-stroke: 11px;
+}
 .gameOverlay .menuIcons {
   position: absolute;
   top: 0;
@@ -676,9 +736,9 @@
   height: auto;
   pointer-events: none;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  background: linear-gradient(0, rgba(0, 0, 0, 0.1), transparent);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), transparent);
   z-index: 7;
 }
 .gameOverlay .menuIcons .flex {
@@ -689,8 +749,10 @@
   background-color: #f8cc8c;
   border-radius: 10px;
   border: 3px solid #000;
+  box-shadow: 0 1px 15px 0px #0009;
   display: flex;
   pointer-events: auto;
+  position: relative;
 }
 .gameOverlay .menuIcons .buttonContainer .icon {
   width: 40px;
@@ -725,6 +787,278 @@
   background-size: contain;
   background-repeat: no-repeat;
 }
+.gameOverlay .menuIcons .buttonContainer .icon.highscores .image {
+  background: url("../img/icon_star.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.gameOverlay .menuIcons .buttonContainer .icon.arMode .image {
+  background: url("../img/icon_ar.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.gameOverlay .menuIcons .buttonContainer .icon.close .image {
+  background: url("../img/icon_cross.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  transform: scale(0.8);
+}
+.gameOverlay .menuIcons .buttonContainer .infoText {
+  font-style: normal;
+  font-size: 14px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  color: #000;
+  position: absolute;
+  bottom: -25px;
+  text-transform: uppercase;
+  display: none;
+  text-align: center;
+  width: 100%;
+}
+.gameOverlay .menuIcons .buttonContainer .infoText.visible {
+  display: block;
+}
+.window {
+  max-width: 450px;
+  width: 90%;
+  height: calc(100% - 200px);
+  max-height: 600px;
+  background-color: #ba9969;
+  border-radius: 11px;
+  border: 3px solid #000;
+  position: absolute;
+  overflow: hidden;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  box-shadow: 0 1px 15px 0px #0009;
+  box-sizing: border-box;
+  top: 150px;
+  right: 50px;
+  -webkit-transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+  -moz-transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+  -o-transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+  transition: all 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+  transform: translateX(calc(100% + 30px + 5vw));
+}
+.window::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: calc(100% + 5px);
+  height: 100%;
+  background-color: #f8cc8c;
+  border-radius: 22px;
+  top: -5px;
+  left: -8px;
+  z-index: -1;
+}
+.window.visible {
+  transform: translateX(0);
+}
+.window .title {
+  font-style: normal;
+  font-size: 34px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  color: #471c72;
+  text-transform: uppercase;
+  text-align: center;
+  text-shadow: 2px 2px #ba9969;
+}
+.window .container {
+  overflow: hidden;
+  border-radius: 11px;
+  border: 1px dashed #ba9969;
+  background-color: #f8cc8c;
+  width: calc(100% - 20px);
+  height: auto;
+  margin: 0 10px 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+.window .container.scrolling {
+  overflow-y: scroll;
+}
+.window .container.light {
+  background-color: #ffddab;
+}
+.window .container h3 {
+  font-style: normal;
+  font-size: 18px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  padding: 0 10px;
+  margin: 0 0 20px;
+}
+.window .container h3:first-child {
+  margin-top: 20px;
+}
+.window .container p {
+  font-style: normal;
+  font-size: 14px;
+  font-family: "Qanelas";
+  font-weight: 300;
+  padding: 0 10px;
+  margin: 0 0 20px;
+  line-height: 20px;
+}
+.window .container p b {
+  font-style: normal;
+  font-size: 14px;
+  font-family: "Qanelas";
+  font-weight: 900;
+}
+.window .container p .icon {
+  display: inline-block;
+  width: 25px;
+  height: 10px;
+  transform: scale(2.4);
+}
+.window .container p .icon.wide {
+  margin: 0 10px;
+}
+.window .container p .icon.door {
+  background: url("../img/icon_door.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.window .container p .icon.star {
+  background: url("../img/icon_star.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.window .container p .icon.rock {
+  background: url("../img/Rock.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.window .container p .icon.paper {
+  background: url("../img/Paper.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.window .container p .icon.scissors {
+  background: url("../img/Scissor.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.window .container p .icon.ar {
+  background: url("../img/icon_ar.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.window .container a {
+  color: #7e37d1;
+}
+.window .container a:hover {
+  color: #471c72;
+}
+.window .buttons {
+  height: 50px;
+  width: auto;
+  display: flex;
+  margin: 5px 10px 10px;
+}
+.window .buttons .button {
+  background-color: #ba9969;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  margin: 5px 10px 5px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.window .buttons .button .image {
+  width: 35px;
+  height: 35px;
+}
+.window .buttons .button.you .image {
+  background: url("../img/icon_star.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.window .buttons .button.refresh .image {
+  background: url("../img/icon_refresh.svg");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.window.highscores .container {
+  margin-bottom: 0;
+}
+.window.highscores .highscoresLegend {
+  display: flex;
+  align-items: center;
+  background-color: #ffddab;
+  box-shadow: 5px 5px 5px #00000017;
+  position: relative;
+}
+.window.highscores .highscoresLegend span {
+  font-style: normal;
+  font-size: 15px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  text-transform: uppercase;
+  padding: 10px;
+  cursor: pointer;
+}
+.window.highscores .highscoresLegend span.active {
+  color: #471c72;
+}
+.window.highscores .highscoresLegend span:hover {
+  color: #7e37d1;
+}
+.window.highscores .highscoresLegend span.name {
+  width: 40%;
+}
+.window.highscores .highscoresLegend span.matchesPlayed {
+  width: 30%;
+}
+.window.highscores .highscoresLegend span.highscore {
+  width: 30%;
+}
+.window.highscores .highscoresContainer {
+  overflow-y: scroll;
+}
+.window.highscores .highscoresContainer .highscore {
+  display: flex;
+  align-items: center;
+  background-color: #efca94;
+  border-bottom: 1px dashed #ba9969;
+}
+.window.highscores .highscoresContainer .highscore span {
+  font-style: normal;
+  font-size: 15px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  padding: 10px;
+  display: block;
+}
+.window.highscores .highscoresContainer .highscore span.userName {
+  width: 40%;
+}
+.window.highscores .highscoresContainer .highscore span.userMatchesPlayed {
+  width: 30%;
+}
+.window.highscores .highscoresContainer .highscore span.userHighscore {
+  width: 30%;
+}
 @media only screen and (max-width: 1000px) {
   .gameOverlay .menuIcons {
     bottom: auto;
@@ -736,7 +1070,7 @@
 @media only screen and (max-width: 900px) {
   .gameOverlay .informationOverlay .versusBar {
     top: 150px;
-    transform: translate(-50%, -220px) rotate(0);
+    transform: translate(-50%, -220px) rotate(0) scale(0.7);
   }
 }
 @media only screen and (max-width: 600px) {
@@ -746,9 +1080,16 @@
   .gameStartup .nameField .nameInput {
     margin: 0 0 20px;
   }
+  .gameOverlay .informationOverlay .loadingText {
+    left: 5%;
+    top: 45px;
+  }
   .gameOverlay .informationOverlay .versusBar {
-    top: 85px;
-    transform: translate(-50%, -140px) rotate(0);
+    top: 95px;
+    transform: translate(-50%, -160px) rotate(0) scale(0.7);
+  }
+  .gameOverlay .informationOverlay .lageMessage span {
+    font-size: 50px;
   }
   .gameOverlay .menuIcons {
     padding: 25px 0 0;
@@ -765,11 +1106,8 @@
     width: 40px;
     height: 40px;
   }
-  .gameOverlay .menuIcons .buttonContainer {
-    display: none;
-  }
   .gameOverlay .menuIcons .flex {
-    margin: 0 25px;
+    margin: 0 5%;
   }
   .gameOverlay .gameControls {
     bottom: 25px;
@@ -781,6 +1119,36 @@
   .gameOverlay .gameControls .hands .hand .image {
     width: 75px;
     height: 100px;
+  }
+  .window {
+    top: 105px;
+    height: calc(100% - 130px);
+    right: 5%;
+  }
+}
+@media only screen and (max-width: 450px) {
+  .gameOverlay .informationOverlay .loadingText {
+    top: auto;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .gameOverlay .window .title {
+    font-size: 30px;
+  }
+  .gameOverlay .window.highscores .container .highscoresLegend span {
+    font-size: 13px;
+  }
+  .gameOverlay .window.highscores .container .highscoresContainer .highscore span {
+    font-size: 13px;
+  }
+}
+@media only screen and (max-width: 350px) {
+  .gameOverlay .window.highscores .container .highscoresLegend span {
+    font-size: 12px;
+  }
+  .gameOverlay .window.highscores .container .highscoresContainer .highscore span {
+    font-size: 12px;
   }
 }
 html,

@@ -12,6 +12,18 @@
   }
 }
 
+@keyframes zoom {
+  0% {
+    transform: scale(1.05);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
 .gameOverlay {
   width: 100%;
   height: 100%;
@@ -150,8 +162,8 @@
       justify-content: flex-start;
       align-items: center;
       position: absolute;
-      top: 36px;
-      left: 20px;
+      top: 70px;
+      left: 50px;
       .defaultTransition(0.5s);
 
       &.visible {
@@ -244,9 +256,9 @@
       z-index: 5;
       overflow: hidden;
       box-shadow: 0 1px 15px 0px #0009;
-      top: 70px;
+      top: 56px;
       left: 50%;
-      transform: translate(-50%, -140px) rotate(0);
+      transform: translate(-50%, -140px) rotate(0) scale(0.7);
       .defaultTransition(0.8s);
 
       &.visible {
@@ -335,6 +347,7 @@
       width: 300px;
       height: 150px;
       .defaultTransition(0.8s);
+      z-index: 5;
 
       &.visible {
         transform: translate(-50%, -50%) scale(1);
@@ -356,6 +369,57 @@
         }
       }
     }
+    .largeMessage {
+      position: absolute;
+      width: 500px;
+      height: auto;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(10);
+      opacity: 0;
+      -webkit-transition: all 0.7s cubic-bezier(0.18, 0.65, 0.18, 1);
+      -moz-transition: all 0.7s cubic-bezier(0.18, 0.65, 0.18, 1);
+      -o-transition: all 0.7s cubic-bezier(0.18, 0.65, 0.18, 1);
+      transition: all 0.7s cubic-bezier(0.18, 0.65, 0.18, 1);
+      z-index: 7;
+
+      &.visible {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+
+      &.hidden {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      .zoombox {
+        animation: 1.4s zoom infinite;
+      }
+
+      span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(5deg);
+        text-align: center;
+        .defaultBoldFont(70px);
+        width: 100%;
+        height: auto;
+        line-height: 0.9;
+      }
+
+      .normal {
+        z-index: 2;
+        color: @darkPurple;
+      }
+
+      .outline {
+        z-index: 1;
+        color: @mainYellow;
+        -webkit-text-stroke: 11px;
+      }
+    }
   }
 
   .menuIcons {
@@ -367,9 +431,9 @@
     height: auto;
     pointer-events: none;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
-    background: linear-gradient(0, rgba(0, 0, 0, 0.1), transparent);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), transparent);
     z-index: 7;
 
     .flex {
@@ -381,8 +445,10 @@
       background-color: @mainYellow;
       border-radius: 10px;
       border: 3px solid @black;
+      box-shadow: 0 1px 15px 0px #0009;
       display: flex;
       pointer-events: auto;
+      position: relative;
 
       .icon {
         width: 40px;
@@ -426,27 +492,50 @@
             background-repeat: no-repeat;
           }
         }
+
+        &.highscores {
+          .image {
+            background: url("../img/icon_star.svg");
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+          }
+        }
+
+        &.arMode {
+          .image {
+            background: url("../img/icon_ar.svg");
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+          }
+        }
+
+        &.close {
+          .image {
+            background: url("../img/icon_cross.svg");
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            transform: scale(0.8);
+          }
+        }
+      }
+
+      .infoText {
+        .defaultBoldFont(14px);
+        color: @black;
+        position: absolute;
+        bottom: -25px;
+        text-transform: uppercase;
+        display: none;
+        text-align: center;
+        width: 100%;
+
+        &.visible {
+          display: block;
+        }
       }
     }
-
-    // .buttonContainer {
-    //   pointer-events: painted;
-    //   width: 90px;
-    //   height: 90px;
-    //   background-color: @lightPurple;
-    //   border-radius: 50%;
-    //
-    //   .toggleButton {
-    //     .defaultToggleButton();
-    //     margin: 28px 20px 15px;
-    //   }
-    //
-    //   .text {
-    //     text-transform: uppercase;
-    //     text-align: center;
-    //     .defaultBoldFont(12px);
-    //     display: block;
-    //   }
-    // }
   }
 }
