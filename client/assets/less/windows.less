@@ -248,3 +248,71 @@
     }
   }
 }
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 8;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 350px;
+  height: auto;
+  background-color: @darkYellow;
+  border: 3px solid @black;
+  border-radius: 10px;
+  overflow: hidden;
+  pointer-events: auto;
+  box-shadow: 0 1px 15px 0px #0009;
+
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: calc(~"100% + 5px");
+    height: 100%;
+    background-color: @mainYellow;
+    border-radius: 22px;
+    top: -5px;
+    left: -8px;
+    z-index: -1;
+  }
+
+  .title {
+    .defaultBoldFont(18px);
+    color: @darkPurple;
+    text-transform: uppercase;
+    text-align: center;
+    text-shadow: 2px 2px @darkYellow;
+  }
+
+  .text {
+    .defaultLightFont(14px);
+    color: black;
+    padding: 0 10px;
+    margin: 0 0 20px;
+    line-height: 20px;
+    text-align: center;
+
+    b {
+      .defaultBoldFont(14px);
+    }
+  }
+
+  .actionButtons {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0 10px;
+    .button {
+      margin: 0 10px;
+
+      &.green {
+        .defaultButton(@mainGreen);
+      }
+
+      &.red {
+        .defaultButton(@mainRed);
+      }
+    }
+  }
+}

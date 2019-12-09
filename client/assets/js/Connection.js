@@ -4,7 +4,7 @@ class Connection {
     this.connectionAttempts = 0;
     this.address = "ws://gh-kerstkaart-2019.herokuapp.com/";
     this.address = "ws://kerstkaart-server-test.meh.greenhousegroup.com/";
-    this.address = "ws://28beacd8.ngrok.io";
+    this.address = "ws://localhost:3000";
     if (address) {
       this.address = address;
     }
@@ -38,6 +38,32 @@ class Connection {
       setTimeout(function() {
         if (connection.connectionAttempts < 5) {
           connection.reconnect();
+        } else {
+          console.log("creating Modal");
+          const options = {
+            title: "Could not connect",
+            text:
+              "Oh Oh, we could not connect to the game server. We're sorry for the inconvenience. You can still look around the room, or try refreshing the page.",
+            button1: {
+              text: "Look around",
+              color: "green"
+            },
+            button2: {
+              text: "Refresh",
+              color: "red"
+            }
+          };
+          game.gameControls.windows.newModal(options, function(result) {
+            switch (result) {
+              case 0:
+                return true;
+                break;
+              case 1:
+                location.reload();
+                break;
+              default:
+            }
+          });
         }
       }, 2000);
     };

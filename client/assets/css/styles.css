@@ -1059,6 +1059,195 @@
 .window.highscores .highscoresContainer .highscore span.userHighscore {
   width: 30%;
 }
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 8;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 350px;
+  height: auto;
+  background-color: #ba9969;
+  border: 3px solid #000;
+  border-radius: 10px;
+  overflow: hidden;
+  pointer-events: auto;
+  box-shadow: 0 1px 15px 0px #0009;
+}
+.modal::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: calc(100% + 5px);
+  height: 100%;
+  background-color: #f8cc8c;
+  border-radius: 22px;
+  top: -5px;
+  left: -8px;
+  z-index: -1;
+}
+.modal .title {
+  font-style: normal;
+  font-size: 18px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  color: #471c72;
+  text-transform: uppercase;
+  text-align: center;
+  text-shadow: 2px 2px #ba9969;
+}
+.modal .text {
+  font-style: normal;
+  font-size: 14px;
+  font-family: "Qanelas";
+  font-weight: 300;
+  color: black;
+  padding: 0 10px;
+  margin: 0 0 20px;
+  line-height: 20px;
+  text-align: center;
+}
+.modal .text b {
+  font-style: normal;
+  font-size: 14px;
+  font-family: "Qanelas";
+  font-weight: 900;
+}
+.modal .actionButtons {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0 10px;
+}
+.modal .actionButtons .button {
+  margin: 0 10px;
+}
+.modal .actionButtons .button.green {
+  background-color: #1a6d38;
+  min-width: 130px;
+  min-height: 40px;
+  border-radius: 13px;
+  border: 3px solid #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  font-size: 14px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  text-transform: uppercase;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  user-select: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.modal .actionButtons .button.green span {
+  padding: 11px 20px;
+}
+.modal .actionButtons .button.green::before {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #2ebf62;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  bottom: 10%;
+  border-radius: 16px;
+}
+.modal .actionButtons .button.green::after {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #fff;
+  width: 15px;
+  height: 8px;
+  z-index: -1;
+  top: 5px;
+  left: 5px;
+  border-radius: 50%;
+  transform: rotate(-20deg);
+}
+.modal .actionButtons .button.green:hover::before {
+  background-color: #29aa57;
+}
+.modal .actionButtons .button.green.disabled {
+  background-color: #626262;
+  pointer-events: none;
+}
+.modal .actionButtons .button.green.disabled::before {
+  background-color: #959595;
+}
+.modal .actionButtons .button.green.disabled:hover::before {
+  background-color: #888888;
+}
+.modal .actionButtons .button.red {
+  background-color: #931414;
+  min-width: 130px;
+  min-height: 40px;
+  border-radius: 13px;
+  border: 3px solid #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  font-size: 14px;
+  font-family: "Qanelas";
+  font-weight: 900;
+  text-transform: uppercase;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  user-select: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+.modal .actionButtons .button.red span {
+  padding: 11px 20px;
+}
+.modal .actionButtons .button.red::before {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #e22b2b;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  bottom: 10%;
+  border-radius: 16px;
+}
+.modal .actionButtons .button.red::after {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #fff;
+  width: 15px;
+  height: 8px;
+  z-index: -1;
+  top: 5px;
+  left: 5px;
+  border-radius: 50%;
+  transform: rotate(-20deg);
+}
+.modal .actionButtons .button.red:hover::before {
+  background-color: #d61d1d;
+}
+.modal .actionButtons .button.red.disabled {
+  background-color: #626262;
+  pointer-events: none;
+}
+.modal .actionButtons .button.red.disabled::before {
+  background-color: #959595;
+}
+.modal .actionButtons .button.red.disabled:hover::before {
+  background-color: #888888;
+}
 @media only screen and (max-width: 1000px) {
   .gameOverlay .menuIcons {
     bottom: auto;

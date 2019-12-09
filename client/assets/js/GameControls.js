@@ -398,6 +398,31 @@ class GameControls {
       game.gameControls.about.updateIcon();
       game.gameControls.highscores.updateIcon();
       return this;
+    },
+    removeModals: function() {
+      $("#modalContainer .modal").remove();
+    },
+    newModal: function(options, callback = false) {
+      var context = this;
+      $.get("/templates/modal.mustache", function(template) {
+        context.removeModals();
+        var renderedModal = Mustache.render(template, options);
+        $("#modalContainer").append(renderedModal);
+
+        console.log(typeof callback);
+        if (typeof callback == "function") {
+          $("#modalContainer .modal .button1").click(function() {
+            context.removeModals();
+            callback(0);
+          });
+          if ($("#modalContainer .modal .button2")) {
+            $("#modalContainer .modal .button2").click(function() {
+              context.removeModals();
+              callback(1);
+            });
+          }
+        }
+      });
     }
   };
 

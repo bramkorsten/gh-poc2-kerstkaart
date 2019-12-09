@@ -1,0 +1,10 @@
+<div class="modal">
+  <h2 class="title">{{title}}</h2>
+  <p class="text">{{text}}</p>
+  <div class="actionButtons">
+    <div class="button button1 {{button1.color}} {{button1.classes}}" {{#button1.function}}onclick="{{button1.function}}"{{/button1.function}}>{{button1.text}}</div>
+    {{#button2}}
+    <div class="button button2 {{button2.color}} {{button2.classes}}" {{#button2.function}}onclick="{{button2.function}}"{{/button2.function}}>{{button2.text}}</div>
+    {{/button2}}
+  </div>
+</div>

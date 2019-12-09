@@ -33,8 +33,12 @@ function getFunctions() {
       game.gameControls.highscores._onRefresh(data);
     },
     error: function(data) {
-      console.log("The server returned an error:");
-      console.error(data);
+      if (data == "uID is invalid") {
+        game.client.destroy();
+      } else {
+        console.log("The server returned an error:");
+        console.error(data);
+      }
     }
   });
 }

@@ -10,6 +10,7 @@ class XmasGame {
     this.gameControls = new GameControls();
     this.models = new GameModels(false);
     this.VREngine = new VREngine();
+    this.audioMixer = new AudioMixer();
     this.scene;
     this.isInAR = false;
     this.clock = new THREE.Clock();
