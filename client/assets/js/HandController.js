@@ -3,19 +3,13 @@ var listener;
 class HandController {
   constructor(gltf) {
     this.player = gltf;
-    // this.player2.scene = gltf.scene.clone();
-    // this.player2.scenes[0] = this.player2.scene;
 
     this.player.mixer = new THREE.AnimationMixer(this.player.scene);
     this.player.clips = this.player.animations;
-    // this.player2.mixer = new THREE.AnimationMixer(this.player2.scene);
-    // this.player2.clips = this.player2.animations;
 
     this.createAnimations(this.player);
-    // this.createAnimations(this.player2);
 
     this.bindFunctions(this.player);
-    // this.bindFunctions(this.player2);
 
     return this.player;
   }

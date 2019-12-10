@@ -9,7 +9,7 @@ class XmasGame {
     this.server = connection.server;
     this.gameControls = new GameControls();
     this.models = new GameModels(false);
-    this.VREngine = new VREngine();
+    // this.VREngine = new VREngine();
     this.audioMixer = new AudioMixer();
     this.scene;
     this.isInAR = false;
@@ -21,6 +21,8 @@ class XmasGame {
     this.gameControls.setupLoadingScreen();
     this.setupRenderEngine();
     this.setupThreeScene();
+
+    this.gameControls.about.show();
   }
 
   /**
@@ -34,6 +36,7 @@ class XmasGame {
       0.1,
       1000
     );
+    game.camera.position.set(-1.2477, 0.907, 1.6847);
     this.gameControls.addOnScreenControls(this);
     this.gameControls.addCameraControls(this);
 
@@ -46,24 +49,25 @@ class XmasGame {
     directionalLight.shadow.camera.far = 60;
     directionalLight.shadow.bias = -0.001;
     directionalLight.mapSize = new THREE.Vector2(2048, 2048);
-    this.scene.add(directionalLight);
+    // this.scene.add(directionalLight);
 
     const helper = new THREE.DirectionalLightHelper(directionalLight);
-    this.scene.add(helper);
+    // this.scene.add(helper);
 
-    var light = new THREE.AmbientLight(0xbfcfed); // soft white light
+    var light = new THREE.AmbientLight(0xffffff);
+    light.intensity = 2;
     this.scene.add(light);
 
-    let btnAR = this.VREngine.createButton(this.renderer, {
-      mode: "immersive-ar",
-      referenceSpaceType: "local", // 'local-floor'
-      sessionInit: {
-        //requiredFeatures: ['local-floor'],
-        optionalFeatures: ["dom-overlay-for-handheld-ar"]
-      }
-    });
+    // let btnAR = this.VREngine.createButton(this.renderer, {
+    //   mode: "immersive-ar",
+    //   referenceSpaceType: "local", // 'local-floor'
+    //   sessionInit: {
+    //     //requiredFeatures: ['local-floor'],
+    //     optionalFeatures: ["dom-overlay-for-handheld-ar"]
+    //   }
+    // });
 
-    this.addAREventListeners();
+    // this.addAREventListeners();
     window.addEventListener("resize", this.onWindowResize, false);
 
     this.animate();
@@ -136,24 +140,34 @@ class XmasGame {
   }
 
   animate(e) {
-    this.renderer.setAnimationLoop((time, frame) => this.render(time, frame));
+    game.renderer.render(game.scene, game.camera);
+    requestAnimationFrame(() => this.render());
+    // this.renderer.setAnimationLoop((time, frame) => this.render(time, frame));
   }
 
-  render(e, XRFrame) {
+  render(e) {
+    requestAnimationFrame(() => this.render());
     var delta = game.clock.getDelta();
-    if (XRFrame) {
-      // console.log(XRFrame.getDevicePose(game.xrRefSpace));
-      if (this.reticle) {
-        this.reticle.update(this.xrRefSpace);
-      }
-    }
+    // if (XRFrame) {
+    //   // console.log(XRFrame.getDevicePose(game.xrRefSpace));
+    //   if (this.reticle) {
+    //     this.reticle.update(this.xrRefSpace);
+    //   }
+    // }
     TWEEN.update();
     game.controls.update();
     if (game.player1 && game.player1.hand) {
       game.player1.hand.updateAnimations(delta);
+      if (game.player1.character) {
+        game.player1.character.updateAnimations(delta);
+      }
+      
     }
     if (game.player2 && game.player2.hand) {
       game.player2.hand.updateAnimations(delta);
+      if (game.player2.character) {
+        game.player2.character.updateAnimations(delta);
+      }
     }
     game.renderer.render(game.scene, game.camera);
   }

@@ -2,9 +2,8 @@ class Connection {
   constructor(address = false) {
     this.isConnected = false;
     this.connectionAttempts = 0;
-    this.address = "ws://gh-kerstkaart-2019.herokuapp.com/";
-    this.address = "ws://kerstkaart-server-test.meh.greenhousegroup.com/";
-    this.address = "ws://localhost:3000";
+    this.address = "wss://kerstkaart-server.meh.greenhousegroup.com";
+    // this.address = "ws://b5e8a0d5.ngrok.io";
     if (address) {
       this.address = address;
     }
@@ -39,7 +38,6 @@ class Connection {
         if (connection.connectionAttempts < 5) {
           connection.reconnect();
         } else {
-          console.log("creating Modal");
           const options = {
             title: "Could not connect",
             text:
@@ -113,7 +111,13 @@ class Connection {
   }
 
   _useDevelopmentAdress() {
-    this.address = "ws://localhost:5000";
+    this.address = "wss://kerstkaart-server-test.meh.greenhousegroup.com";
+    this.server.close();
+    this.reconnect();
+  }
+
+  _useLocalAdress() {
+    this.address = "ws://localhost:3000";
     this.server.close();
     this.reconnect();
   }
