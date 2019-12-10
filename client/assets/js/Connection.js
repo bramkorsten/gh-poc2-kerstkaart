@@ -2,12 +2,21 @@ class Connection {
   constructor(address = false) {
     this.isConnected = false;
     this.connectionAttempts = 0;
-    this.address = "wss://kerstkaart-server.meh.greenhousegroup.com";
-    // this.address = "ws://b5e8a0d5.ngrok.io";
-    if (address) {
-      this.address = address;
+    this.addresses = {
+      0: "ws://localhost:3000",
+      1: "wss://kerstkaart-server-test.meh.greenhousegroup.com",
+      2: "wss://kerstkaart-server.meh.greenhousegroup.com"
+    }    
+    if (!Cookies.get("activeServer")) {
+      Cookies.set("activeServer", 2, { expires: 365 });
     }
-    this.server = new WebSocket(this.address);
+    this.activeServer = Cookies.get("activeServer") || 2;
+    if (address) {
+      this.server = new WebSocket(addresses);
+    } else {
+      this.server = new WebSocket(this.addresses[this.activeServer]);
+    }
+    
     this.setupConnectionListeners();
     return this;
   }
@@ -88,7 +97,7 @@ class Connection {
       .changeColor("purple")
       .changeTextAndToggle("Reconnecting");
     this.connectionAttempts++;
-    this.server = new WebSocket(this.address);
+    this.server = new WebSocket(this.addresses[this.activeServer]);
     this.setupConnectionListeners();
   }
 
@@ -110,14 +119,23 @@ class Connection {
     this.server.send(JSON.stringify(message));
   }
 
+  _useLiveAdress() {
+    Cookies.set("activeServer", 2, { expires: 365 });
+    this.activeServer = 2;
+    this.server.close();
+    this.reconnect();
+  }
+
   _useDevelopmentAdress() {
-    this.address = "wss://kerstkaart-server-test.meh.greenhousegroup.com";
+    Cookies.set("activeServer", 1, { expires: 365 });
+    this.activeServer = 1;
     this.server.close();
     this.reconnect();
   }
 
   _useLocalAdress() {
-    this.address = "ws://localhost:3000";
+    Cookies.set("activeServer", 0, { expires: 365 });
+    this.activeServer = 0;
     this.server.close();
     this.reconnect();
   }

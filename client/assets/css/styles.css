@@ -546,7 +546,7 @@
   font-size: 14px;
   font-family: "Qanelas";
   font-weight: 900;
-  color: #000;
+  color: #fff;
   display: block;
   -webkit-transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
   -moz-transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
@@ -811,7 +811,7 @@
   font-size: 14px;
   font-family: "Qanelas";
   font-weight: 900;
-  color: #000;
+  color: #fff;
   position: absolute;
   bottom: -25px;
   text-transform: uppercase;
@@ -1277,7 +1277,7 @@
     top: 95px;
     transform: translate(-50%, -160px) rotate(0) scale(0.7);
   }
-  .gameOverlay .informationOverlay .lageMessage span {
+  .gameOverlay .informationOverlay .largeMessage span {
     font-size: 50px;
   }
   .gameOverlay .menuIcons {

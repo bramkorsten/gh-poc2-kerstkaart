@@ -39,6 +39,9 @@ function getFunctions() {
         console.log("The server returned an error:");
         console.error(data);
       }
+    },
+    message: function(data) {
+      console.log("[SERVER]: " + data);
     }
   });
 }
