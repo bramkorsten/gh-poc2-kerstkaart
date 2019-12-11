@@ -58,6 +58,7 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    flex: 1;
 
     &.scrolling {
       overflow-y: scroll;
@@ -189,34 +190,38 @@
       margin-bottom: 0;
     }
     .highscoresLegend {
-      display: flex;
+      display: block;
       align-items: center;
       background-color: @lightyellow;
       box-shadow: 5px 5px 5px #00000017;
       position: relative;
 
-      span {
-        .defaultBoldFont(15px);
-        text-transform: uppercase;
-        padding: 10px;
-        cursor: pointer;
-
-        &.active {
-          color: @darkPurple;
-        }
-
-        &:hover {
-          color: @mainPurple;
-        }
-
-        &.name {
-          width: 40%;
-        }
-        &.matchesPlayed {
-          width: 30%;
-        }
-        &.highscore {
-          width: 30%;
+      .flex {
+        display: flex;
+        align-items: center;
+        span {
+          .defaultBoldFont(15px);
+          text-transform: uppercase;
+          padding: 10px;
+          cursor: pointer;
+  
+          &.active {
+            color: @darkPurple;
+          }
+  
+          &:hover {
+            color: @mainPurple;
+          }
+  
+          &.name {
+            width: 40%;
+          }
+          &.matchesPlayed {
+            width: 30%;
+          }
+          &.highscore {
+            width: 30%;
+          }
         }
       }
     }
@@ -228,6 +233,10 @@
         align-items: center;
         background-color: @offsetYellow;
         border-bottom: 1px dashed @darkYellow;
+
+        &.isClient {
+          color: @mainPurple;
+        }
 
         span {
           .defaultBoldFont(15px);

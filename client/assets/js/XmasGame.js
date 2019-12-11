@@ -141,19 +141,20 @@ class XmasGame {
 
   animate(e) {
     game.renderer.render(game.scene, game.camera);
-    requestAnimationFrame(() => this.render());
-    // this.renderer.setAnimationLoop((time, frame) => this.render(time, frame));
+    // requestAnimationFrame(() => this.render());
+    this.renderer.setAnimationLoop((time, frame) => this.render(time, frame));
   }
 
-  render(e) {
-    requestAnimationFrame(() => this.render());
+  render(e, XRFrame) {
+    // console.log(XRFrame);
+    // requestAnimationFrame(() => this.render());
     var delta = game.clock.getDelta();
-    // if (XRFrame) {
-    //   // console.log(XRFrame.getDevicePose(game.xrRefSpace));
-    //   if (this.reticle) {
-    //     this.reticle.update(this.xrRefSpace);
-    //   }
-    // }
+    if (XRFrame) {
+      console.log(XRFrame.getDevicePose(game.xrRefSpace));
+      if (this.reticle) {
+        this.reticle.update(this.xrRefSpace);
+      }
+    }
     TWEEN.update();
     game.controls.update();
     if (game.player1 && game.player1.hand) {

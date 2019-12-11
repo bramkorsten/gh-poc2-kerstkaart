@@ -882,6 +882,7 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 .window .container.scrolling {
   overflow-y: scroll;
@@ -1003,13 +1004,17 @@
   margin-bottom: 0;
 }
 .window.highscores .highscoresLegend {
-  display: flex;
+  display: block;
   align-items: center;
   background-color: #ffddab;
   box-shadow: 5px 5px 5px #00000017;
   position: relative;
 }
-.window.highscores .highscoresLegend span {
+.window.highscores .highscoresLegend .flex {
+  display: flex;
+  align-items: center;
+}
+.window.highscores .highscoresLegend .flex span {
   font-style: normal;
   font-size: 15px;
   font-family: "Qanelas";
@@ -1018,19 +1023,19 @@
   padding: 10px;
   cursor: pointer;
 }
-.window.highscores .highscoresLegend span.active {
+.window.highscores .highscoresLegend .flex span.active {
   color: #471c72;
 }
-.window.highscores .highscoresLegend span:hover {
+.window.highscores .highscoresLegend .flex span:hover {
   color: #7e37d1;
 }
-.window.highscores .highscoresLegend span.name {
+.window.highscores .highscoresLegend .flex span.name {
   width: 40%;
 }
-.window.highscores .highscoresLegend span.matchesPlayed {
+.window.highscores .highscoresLegend .flex span.matchesPlayed {
   width: 30%;
 }
-.window.highscores .highscoresLegend span.highscore {
+.window.highscores .highscoresLegend .flex span.highscore {
   width: 30%;
 }
 .window.highscores .highscoresContainer {
@@ -1041,6 +1046,9 @@
   align-items: center;
   background-color: #efca94;
   border-bottom: 1px dashed #ba9969;
+}
+.window.highscores .highscoresContainer .highscore.isClient {
+  color: #7e37d1;
 }
 .window.highscores .highscoresContainer .highscore span {
   font-style: normal;
@@ -1335,6 +1343,7 @@
 @media only screen and (max-width: 350px) {
   .gameOverlay .window.highscores .container .highscoresLegend span {
     font-size: 12px;
+    padding: 10px 5px 10px 10px;
   }
   .gameOverlay .window.highscores .container .highscoresContainer .highscore span {
     font-size: 12px;

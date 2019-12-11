@@ -550,6 +550,9 @@ class GameControls {
             return b.dataset.matchesPlayed - a.dataset.matchesPlayed;
           }
         },
+        goToCurrentPlayer: function() {
+          $(".highscoresContainer").animate({scrollTop: $(".highscoresContainer").scrollTop() + ($('.highscore.isClient').offset().top - $(".highscoresContainer").offset().top)}, 2000);
+        },
         _onRefresh: function(data) {
           const context = this;
           $("#highscoreWindow .highscoresContainer .highscore").remove();
@@ -561,8 +564,12 @@ class GameControls {
                   name: e.name,
                   matchesPlayed: e.gamesPlayed,
                   highscore: e.highscore.bestStreak,
-                  token: e.uToken
+                  token: e.uToken,
+                  isClient: false
                 };
+                if (e.uToken === game.client.token) {
+                  userInfo.isClient = true;
+                }
                 // context.highscoreList.push(userInfo);
                 var renderedHighscore = Mustache.render(template, userInfo);
                 $("#highscoreWindow .highscoresContainer").append(

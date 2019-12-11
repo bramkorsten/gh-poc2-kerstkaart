@@ -84,32 +84,28 @@ class GameLogic {
   }
 
   finishGame(results) {
-    this.state.madeChoice = false;
+    
     game.gameControls.vibrate();
     game.gameControls.windows.hideAllWindows();
     switch (results.result) {
       case "1":
-        if (this.state.isPlayer1) {
-          game.player1.hand.state.isWinning = true;
-          game.player2.hand.state.isWinning = false;
-        } else {
-          game.player1.hand.state.isWinning = false;
-          game.player2.hand.state.isWinning = true;
-        }
+        game.player1.hand.state.isWinning = true;
+        game.player2.hand.state.isWinning = false;
+        game.player1.hand.doShake(results.player1.choice);
+        game.player2.hand.doShake(results.player2.choice);
         break;
       case "2":
-        if (this.state.isPlayer1) {
-          game.player1.hand.state.isWinning = false;
-          game.player2.hand.state.isWinning = true;
-        } else {
-          game.player1.hand.state.isWinning = true;
-          game.player2.hand.state.isWinning = false;
-        }
+        game.player1.hand.state.isWinning = false;
+        game.player2.hand.state.isWinning = true;
+        game.player1.hand.doShake(results.player1.choice);
+        game.player2.hand.doShake(results.player2.choice);
         break;
       case "tie":
         // TODO: Fix animation for tied state
-        game.player1.hand.state.isWinning = false;
-        game.player2.hand.state.isWinning = false;
+        game.player1.hand.state.isWinning = true;
+        game.player2.hand.state.isWinning = true;
+        game.player1.hand.doShake("fles");
+        game.player2.hand.doShake("fles");
         break;
       case "forfeit":
         break;
@@ -118,24 +114,34 @@ class GameLogic {
         console.log("Unexpected error in game ending");
         return false;
     }
-    game.player1.hand.doShake(results.player1.choice);
-    game.player2.hand.doShake(results.player2.choice);
-
-    if (results.result == "tie") {
-      game.gameControls.showWinnerScroll("It's a", "tie");
-    } else if (results.result == "forfeit") {
-      game.gameControls.showWinnerScroll("", "forfeited");
-    } else if (this.state.isPlayer1 && results.result == 1) {
-      game.gameControls.showWinnerScroll("You", "Won");
-    } else if (!this.state.isPlayer1 && results.result == 2) {
-      game.gameControls.showWinnerScroll("You", "Won");
-    } else {
-      game.gameControls.showWinnerScroll("You", "Lost");
-    }
-    this.showEndgameControls();
+    setTimeout(() => {
+      if (results.result == 1) {
+        game.player1.character.cheer();
+        game.player2.character.disbelief();
+      } else if (results.result == 2) {
+        game.player1.character.disbelief();
+        game.player2.character.cheer();
+      }
+    }, 2000),
+    setTimeout(() => {
+      if (results.result == "tie") {
+        game.gameControls.showWinnerScroll("It's a", "tie");
+      } else if (results.result == "forfeit") {
+        game.gameControls.showWinnerScroll("", "forfeited");
+      } else if (this.state.isPlayer1 && results.result == 1) {
+        game.gameControls.showWinnerScroll("You", "Won");
+      } else if (!this.state.isPlayer1 && results.result == 2) {
+        game.gameControls.showWinnerScroll("You", "Won");
+      } else {
+        game.gameControls.showWinnerScroll("You", "Lost");
+      }
+      this.showEndgameControls();
+    }, 4000);
+    
   }
 
   showEndgameControls() {
+    this.state.madeChoice = false;
     this.state.isInGame = false;
     game.gameControls.showHandControls(false);
     game.gameControls.showRestartButtons(true);

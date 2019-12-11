@@ -3,8 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>POC2</title>
+    <title>Greenhouse Kerstgame 2019</title>
     <link rel="stylesheet" href="assets/css/styles.css" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/favicon-16x16.png">
+    <link rel="manifest" href="manifest.json">
+    <link rel="mask-icon" href="/assets/icons/safari-pinned-tab.svg" color="#ec0000">
+    <link rel="shortcut icon" href="/assets/icons/favicon.ico">
+    <meta name="msapplication-TileColor" content="#471c72">
+    <meta name="msapplication-config" content="/assets/icons/browserconfig.xml">
+    <meta name="theme-color" content="#471c72">
   </head>
   <body>
     <div class="gameStartup visible">
@@ -128,21 +137,23 @@
         <h2 class="title">Highscores</h2>
         <div class="container">
           <div class="highscoresLegend">
-            <span
-              class="name"
-              onclick="game.gameControls.highscores.sortByName()"
-              >Name</span
-            >
-            <span
-              class="matchesPlayed"
-              onclick="game.gameControls.highscores.sortByGamesPlayed()"
-              ># Played</span
-            >
-            <span
-              class="highscore active"
-              onclick="game.gameControls.highscores.sortByHighscore()"
-              >Highscore</span
-            >
+            <div class="flex">
+                <span
+                class="name"
+                onclick="game.gameControls.highscores.sortByName()"
+                >Name</span
+              >
+              <span
+                class="matchesPlayed"
+                onclick="game.gameControls.highscores.sortByGamesPlayed()"
+                ># Played</span
+              >
+              <span
+                class="highscore active"
+                onclick="game.gameControls.highscores.sortByHighscore()"
+                >Highscore</span
+              >
+            </div> 
           </div>
           <div class="highscoresContainer">
             <div class="highscore">
@@ -151,7 +162,7 @@
           </div>
         </div>
         <div class="buttons">
-          <div class="button you" onclick=""><div class="image"></div></div>
+          <div class="button you" onclick="game.gameControls.highscores.goToCurrentPlayer()"><div class="image"></div></div>
           <div
             class="button refresh"
             onclick="game.gameControls.highscores.refresh()"
@@ -254,7 +265,7 @@
       charset="utf-8"
     ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
-    <script src="assets/includes/three/three.min.js" charset="utf-8"></script>
+    <script src="assets/includes/three/three.min.js"></script>
     <!--<script src="assets/includes/three/three.js" charset="utf-8"></script>-->
     <script
       src="assets/includes/three/loaders/GLTFLoader.js"
