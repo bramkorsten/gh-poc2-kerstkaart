@@ -20,10 +20,12 @@ class GameModels {
   }
 
   async loadModelsAndTextures(withEnvMap = false, withMetalness = false) {
+    game.objects = new THREE.Group();
     // Use with caution. This impacts performance in a MAJOR way.
     if (withEnvMap) await this.loadEnvironmentTexture("fireplace_1k.hdr");
 
     var gltfLoader = new THREE.GLTFLoader(this.manager);
+    var svgLoader = new THREE.SVGLoader(this.manager);
 
     gltfLoader.load(
       "assets/models/scene/scene_final_v2.glb",
@@ -47,10 +49,8 @@ class GameModels {
             }
           }
         });
-        gltf.scene.scale.set(0.5, 0.5, 0.5);
-        game.objects = {};
-        game.objects.closet = gltf.scene;
-        game.scene.add(gltf.scene);
+        gltf.scene.scale.set(0.5,0.5,0.5);
+        game.objects.add(gltf.scene);
       },
       undefined,
       function(error) {
@@ -71,7 +71,7 @@ class GameModels {
     gltfLoader.load("assets/models/glove/glove.glb", function(gltf) {
       game.player1.hand = new HandController(gltf);
       game.player1.hand.scene.position.set(0, 0.45, -0.35);
-      game.scene.add(game.player1.hand.scene);
+      game.objects.add(game.player1.hand.scene);
       game.player1.hand.mixer.timeScale = 1.4;
       game.player1.hand.start();
     });
@@ -81,7 +81,7 @@ class GameModels {
       game.player2.hand.scene.position.set(0, 0.45, 0.35);
       game.player2.hand.scene.rotation.set(0, THREE.Math.degToRad(180), 0);
       game.player2.hand.mixer.timeScale = 1.4;
-      game.scene.add(game.player2.hand.scene);
+      game.objects.add(game.player2.hand.scene);
       game.player2.hand.start();
     });
 
@@ -91,7 +91,7 @@ class GameModels {
       game.player1.character.scene.scale.set(0.5, 0.5, 0.5);
       game.player1.character.scene.rotation.set(0, THREE.Math.degToRad(0), 0);
       game.player1.character.mixer.timeScale = 1.1;
-      game.scene.add(game.player1.character.scene);
+      game.objects.add(game.player1.character.scene);
       game.player1.character.startIdleLoop();
     });
 
@@ -101,8 +101,47 @@ class GameModels {
       game.player2.character.scene.scale.set(0.5, 0.5, 0.5);
       game.player2.character.scene.rotation.set(0, THREE.Math.degToRad(180), 0);
       game.player2.character.mixer.timeScale = 1.3;
-      game.scene.add(game.player2.character.scene);
+      game.objects.add(game.player2.character.scene);
       game.player2.character.startIdleLoop();
+    });
+
+    svgLoader.load('assets/img/ar_sticker.svg', function ( data ) {
+
+      var paths = data.paths;
+      var group = new THREE.Group();
+
+      for ( var i = 0; i < paths.length; i ++ ) {
+
+        var path = paths[ i ];
+
+        
+        var material = new THREE.MeshBasicMaterial( {
+          color: 0xFFFFFF,
+          side: THREE.DoubleSide,
+          depthWrite: true
+        } );
+
+        var shapes = path.toShapes( true );
+
+        for ( var j = 0; j < shapes.length; j ++ ) {
+
+          var shape = shapes[ j ];
+          var geometry = new THREE.ShapeBufferGeometry( shape );
+          var mesh = new THREE.Mesh( geometry, material );
+          group.add( mesh );
+
+        }
+
+      }
+      group.scale.set(0.01,0.01,0.01);
+      
+      game.sticker = group;
+      group.position.set(-1.75,-0.001,-1.75);
+      group.rotation.set(THREE.Math.degToRad(90), 0,0);
+      game.arSticker = new THREE.Object3D();
+      game.arSticker.add(group);
+
+      // game.scene.add( game.arSticker );
     });
   }
 

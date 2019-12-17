@@ -217,6 +217,20 @@ class GameControls {
     tweenCameraTarget.start();
   }
 
+  popupScene() {
+    const scale = new THREE.Vector3(0.1, 0.1, 0.1);
+
+    var tweenScene = new TWEEN.Tween(game.objects.scale).to({
+      x: scale.x,
+      y: scale.y,
+      z: scale.z,
+    }, 1000).onUpdate(function() {
+      game.objects.scale.set(this.x, this.y, this.z);
+    });
+    tweenScene.easing(TWEEN.Easing.Quadratic.InOut);
+    tweenScene.start();
+  }
+
   showVersusBar(data) {
     clearTimeout(this.versusBarTimeout);
     const player1Name = data.currentGame.players[0].player.name;

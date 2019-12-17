@@ -9,7 +9,7 @@ class XmasGame {
     this.server = connection.server;
     this.gameControls = new GameControls();
     this.models = new GameModels(false);
-    // this.VREngine = new VREngine();
+    this.VREngine = new VREngine();
     this.audioMixer = new AudioMixer();
     this.scene;
     this.isInAR = false;
@@ -33,7 +33,7 @@ class XmasGame {
     this.camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
-      0.1,
+      0.01,
       1000
     );
     game.camera.position.set(-1.2477, 0.907, 1.6847);
@@ -42,32 +42,22 @@ class XmasGame {
 
     await this.models.loadModelsAndTextures(false, false);
 
-    var directionalLight = new THREE.DirectionalLight(0xf9d891, 1);
-    directionalLight.castShadow = true;
-    directionalLight.position.set(10, 5, 5);
-    directionalLight.shadow.camera.near = 1;
-    directionalLight.shadow.camera.far = 60;
-    directionalLight.shadow.bias = -0.001;
-    directionalLight.mapSize = new THREE.Vector2(2048, 2048);
-    // this.scene.add(directionalLight);
-
-    const helper = new THREE.DirectionalLightHelper(directionalLight);
-    // this.scene.add(helper);
+    this.scene.add(this.objects);
 
     var light = new THREE.AmbientLight(0xffffff);
     light.intensity = 2;
     this.scene.add(light);
 
-    // let btnAR = this.VREngine.createButton(this.renderer, {
-    //   mode: "immersive-ar",
-    //   referenceSpaceType: "local", // 'local-floor'
-    //   sessionInit: {
-    //     //requiredFeatures: ['local-floor'],
-    //     optionalFeatures: ["dom-overlay-for-handheld-ar"]
-    //   }
-    // });
+    let btnAR = this.VREngine.createButton(this.renderer, {
+      mode: "immersive-ar",
+      referenceSpaceType: "local", // 'local-floor'
+      sessionInit: {
+        //requiredFeatures: ['local-floor'],
+        optionalFeatures: ["dom-overlay-for-handheld-ar"]
+      }
+    });
 
-    // this.addAREventListeners();
+    this.addAREventListeners();
     window.addEventListener("resize", this.onWindowResize, false);
 
     this.animate();
@@ -115,6 +105,7 @@ class XmasGame {
     this.renderer.vr.addEventListener("sessionend", function(ev) {
       console.log("sessionend", ev);
       game.isInAR = false;
+      game.objects.scale.set(1,1,1);
       $("#arButton").removeClass("checked");
       document.body.style.backgroundColor = "";
       game.renderer.domElement.style.display = "";
@@ -141,16 +132,14 @@ class XmasGame {
 
   animate(e) {
     game.renderer.render(game.scene, game.camera);
-    // requestAnimationFrame(() => this.render());
     this.renderer.setAnimationLoop((time, frame) => this.render(time, frame));
   }
 
   render(e, XRFrame) {
     // console.log(XRFrame);
-    // requestAnimationFrame(() => this.render());
     var delta = game.clock.getDelta();
     if (XRFrame) {
-      console.log(XRFrame.getDevicePose(game.xrRefSpace));
+      // console.log(XRFrame.getDevicePose(game.xrRefSpace));
       if (this.reticle) {
         this.reticle.update(this.xrRefSpace);
       }
@@ -176,36 +165,42 @@ class XmasGame {
   onClick(e) {
     const x = 0;
     const y = 0;
-    console.log("Normal Click Detected");
 
-    if (game.isInAR) {
+    if (game.isInAR && e.target == $("body")[0]) {
       game.onARClick();
     }
     // console.log(this.reticle.position);
   }
 
   onARClick() {
-    console.log("AR Click passed");
     if (this.reticle && this.reticle.visible) {
-      console.log("reticle visible");
       const position = this.reticle.position;
       const rotation = this.reticle.rotation;
-
-      this.objects.closet.position.set(position.x, position.y, position.z);
-      this.objects.closet.rotation.set(rotation.x, rotation.y, rotation.z);
-      this.objects.closet.visible = true;
+      this.objects.position.set(position.x, position.y, position.z);
+      this.objects.rotation.set(0, rotation.y, 0)
+      if (!this.objects.visible) {
+        this.objects.visible = true;
+        
+      }
+      this.objects.scale.set(0,0,0);
+      this.gameControls.popupScene();
     }
   }
 
   onARStarted() {
     console.log("AR Started");
-    this.objects.closet.visible = false;
+    this.objects.visible = false;
+    this.objects.scale.set(0,0,0);
     // this.scene.scale.set(0.5, 0.5, 0.5);
   }
 
   onARStopped() {
     console.log("AR Stopped");
     this.reticle.visible = false;
+    this.objects.position.set(0,0,0);
+    this.objects.rotation.set(0,0,0);
+    this.objects.scale.set(1,1,1);
+    this.objects.visible = true;
     // this.scene.scale.set(1, 1, 1);
   }
 }

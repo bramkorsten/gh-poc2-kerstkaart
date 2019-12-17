@@ -104,9 +104,9 @@
       <div class="menuIcons">
         <div class="right flex">
           <div id="menuButtons" class="buttonContainer">
-            <!--<div class="icon arMode" data-info="View in AR">
+            <div class="icon arMode disabled" id="arButton" data-info="View in AR">
               <div class="image"></div>
-            </div>-->
+            </div>
             <div
               class="icon highscores"
               data-info="View highscores"
@@ -265,7 +265,7 @@
       charset="utf-8"
     ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
-    <script src="assets/includes/three/three.min.js"></script>
+    <script src="assets/includes/three/three.js"></script>
     <!--<script src="assets/includes/three/three.js" charset="utf-8"></script>-->
     <script
       src="assets/includes/three/loaders/GLTFLoader.js"
@@ -273,6 +273,10 @@
     ></script>
     <script
       src="assets/includes/three/loaders/RGBELoader.js"
+      charset="utf-8"
+    ></script>
+    <script
+      src="assets/includes/three/loaders/SVGLoader.js"
       charset="utf-8"
     ></script>
     <script
@@ -297,7 +301,7 @@
     <script src="assets/js/GameModels.js" charset="utf-8"></script>
     <script src="assets/js/HandController.js" charset="utf-8"></script>
     <script src="assets/js/Character.js" charset="utf-8"></script>
-    <script src="assets/js/reticle.js" charset="utf-8"></script>
+    <script src="assets/js/Reticle.js" charset="utf-8"></script>
     <script src="assets/js/VREngine.js" charset="utf-8"></script>
     <script src="assets/js/AudioMixer.js" charset="utf-8"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>

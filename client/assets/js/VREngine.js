@@ -93,13 +93,17 @@ class VREngine {
 
       button.on("click", function() {
         if (currentSession === null) {
-          var mode = (options && options.mode) || "immersive-vr";
-          var sessionInit = getXRSessionInit(mode, options);
-          navigator.xr.requestSession(mode, sessionInit).then(onSessionStarted);
+          startSession();
         } else {
           currentSession.end();
         }
       });
+
+      function startSession() {
+        var mode = (options && options.mode) || "immersive-vr";
+        var sessionInit = getXRSessionInit(mode, options);
+        navigator.xr.requestSession(mode, sessionInit).then(onSessionStarted);
+      }
     }
 
     function disableButton() {
@@ -113,7 +117,7 @@ class VREngine {
 
     if ("xr" in navigator && "supportsSession" in navigator.xr) {
       var button = $("#arButton");
-      button.removeClass("visible");
+      button.removeClass("disabled");
 
       var mode = (options && options.mode) || "immersive-vr";
       // SupportsSession will be replaced with isSessionSupported
@@ -121,20 +125,8 @@ class VREngine {
         .supportsSession(mode)
         .then(showEnterXR)
         .catch(showXRNotFound);
-
+      game.capibleOfAR = true;
       return button;
-    } else {
-      var message = document.createElement("a");
-      message.href = "https://webvr.info";
-      message.innerHTML = "WEBVR NOT SUPPORTED";
-
-      message.style.left = "calc(50% - 90px)";
-      message.style.width = "180px";
-      message.style.textDecoration = "none";
-
-      // stylizeElement(message);
-
-      return message;
     }
   }
 }

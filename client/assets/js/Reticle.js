@@ -6,43 +6,42 @@ class Reticle extends THREE.Object3D {
   constructor(xrSession, camera) {
     super();
 
-    this.loader = new THREE.TextureLoader();
+    // this.loader = new THREE.TextureLoader();
 
-    let geometry = new THREE.RingGeometry(0.1, 0.11, 24, 1);
-    let material = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    // Orient the geometry so its position is flat on a horizontal surface
-    geometry.applyMatrix(
-      new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(-90))
-    );
+    // let geometry = new THREE.RingGeometry(0.1, 0.11, 24, 1);
+    // let material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    // // Orient the geometry so its position is flat on a horizontal surface
+    // geometry.applyMatrix(
+    //   new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(-90))
+    // );
 
-    this.ring = new THREE.Mesh(geometry, material);
+    // this.ring = new THREE.Mesh(geometry, material);
 
-    geometry = new THREE.PlaneBufferGeometry(0.15, 0.15);
-    // Orient the geometry so its position is flat on a horizontal surface,
-    // as well as rotate the image so the anchor is facing the user
-    geometry.applyMatrix(
-      new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(-90))
-    );
-    geometry.applyMatrix(
-      new THREE.Matrix4().makeRotationY(THREE.Math.degToRad(0))
-    );
-    material = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0
-    });
-    this.icon = new THREE.Mesh(geometry, material);
+    // geometry = new THREE.PlaneBufferGeometry(0.15, 0.15);
+    // // Orient the geometry so its position is flat on a horizontal surface,
+    // // as well as rotate the image so the anchor is facing the user
+    // geometry.applyMatrix(
+    //   new THREE.Matrix4().makeRotationX(THREE.Math.degToRad(-90))
+    // );
+    // geometry.applyMatrix(
+    //   new THREE.Matrix4().makeRotationY(THREE.Math.degToRad(0))
+    // );
+    // material = new THREE.MeshBasicMaterial({
+    //   color: 0xffffff,
+    //   transparent: true,
+    //   opacity: 0
+    // });
+    // this.icon = new THREE.Mesh(geometry, material);
 
-    // Load the anchor texture and apply it to our material
-    // once loaded
-    this.loader.load("assets/img/gh_logo-01.png", texture => {
-      this.icon.material.opacity = 1;
-      this.icon.material.map = texture;
-    });
+    // // Load the anchor texture and apply it to our material
+    // // once loaded
+    // this.loader.load("assets/img/gh_logo-01.png", texture => {
+    //   this.icon.material.opacity = 1;
+    //   this.icon.material.map = texture;
+    // });
 
-    this.add(this.ring);
-    this.add(this.icon);
-
+    this.add(game.arSticker);
+    this.scale.set(0.15,0.15,0.15);
     this.session = xrSession;
     this.visible = false;
     this.camera = camera;

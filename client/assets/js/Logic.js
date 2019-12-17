@@ -122,22 +122,24 @@ class GameLogic {
         game.player1.character.disbelief();
         game.player2.character.cheer();
       }
-    }, 2000),
-    setTimeout(() => {
-      if (results.result == "tie") {
-        game.gameControls.showWinnerScroll("It's a", "tie");
-      } else if (results.result == "forfeit") {
-        game.gameControls.showWinnerScroll("", "forfeited");
-      } else if (this.state.isPlayer1 && results.result == 1) {
-        game.gameControls.showWinnerScroll("You", "Won");
-      } else if (!this.state.isPlayer1 && results.result == 2) {
-        game.gameControls.showWinnerScroll("You", "Won");
-      } else {
-        game.gameControls.showWinnerScroll("You", "Lost");
-      }
+    }, 2000);
+    if (results.result == "forfeit") {
+      game.gameControls.showWinnerScroll("", "forfeited");
       this.showEndgameControls();
-    }, 4000);
-    
+    } else {
+      setTimeout(() => {
+        if (results.result == "tie") {
+          game.gameControls.showWinnerScroll("It's a", "tie");
+        } else if (this.state.isPlayer1 && results.result == 1) {
+          game.gameControls.showWinnerScroll("You", "Won");
+        } else if (!this.state.isPlayer1 && results.result == 2) {
+          game.gameControls.showWinnerScroll("You", "Won");
+        } else {
+          game.gameControls.showWinnerScroll("You", "Lost");
+        }
+        this.showEndgameControls();
+      }, 4000);
+    } 
   }
 
   showEndgameControls() {

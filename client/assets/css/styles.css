@@ -681,7 +681,8 @@
 }
 .gameOverlay .informationOverlay .largeMessage {
   position: absolute;
-  width: 500px;
+  max-width: 500px;
+  width: 90%;
   height: auto;
   top: 50%;
   left: 50%;
@@ -764,6 +765,9 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+}
+.gameOverlay .menuIcons .buttonContainer .icon.disabled {
+  display: none;
 }
 .gameOverlay .menuIcons .buttonContainer .icon .image {
   width: 35px;

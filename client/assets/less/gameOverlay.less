@@ -371,7 +371,8 @@
     }
     .largeMessage {
       position: absolute;
-      width: 500px;
+      max-width: 500px;
+      width: 90%;
       height: auto;
       top: 50%;
       left: 50%;
@@ -460,6 +461,10 @@
         justify-content: center;
         align-items: center;
         cursor: pointer;
+
+        &.disabled {
+          display: none;
+        }
 
         .image {
           width: 35px;
